@@ -24,9 +24,9 @@ The category slug must match the corresponding file in `.github/DISCUSSION_TEMPL
 | Engineering | Benchmarks & Performance | `benchmarks-performance` | Open-ended | `discussion:benchmark-analysis`, `operational:benchmarking` |
 | Engineering | Development Help | `development-help` | Question & Answer | `discussion:question`, `developmental` |
 | Community | Questions | `questions` | Question & Answer | `discussion:question` |
-| Community | Show & Tell | `show-and-tell` | Open-ended | `discussion` |
+| Community | Show & Tell | `show-tell` | Open-ended | `discussion` |
 | Community | Polls | `polls` | Poll | No form; GitHub does not support category forms for polls |
-| Governance | Governance & Administration | `governance` | Open-ended | `discussion`, `role`, `access` |
+| Governance | Governance & Administration | `governance-administration` | Open-ended | `discussion`, `role`, `access` |
 
 ## Discussion to Issue promotion
 

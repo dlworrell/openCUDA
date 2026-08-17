@@ -95,6 +95,7 @@ tests/                  Native tests
 - [`docs/REFERENCE_PLATFORM.md`](docs/REFERENCE_PLATFORM.md) — DL380p/CUBIX/K80 reference node
 - [`docs/DEVELOPMENT.md`](docs/DEVELOPMENT.md) — toolchains, build presets, CI, and coding workflow
 - [`docs/ROADMAP.md`](docs/ROADMAP.md) — staged implementation plan
+- [`docs/LABEL_TAXONOMY.md`](docs/LABEL_TAXONOMY.md) — repository label families, qualified labels, and application rules
 - [`SECURITY.md`](SECURITY.md) — security and legacy-driver risk policy
 
 ## Upstream references

@@ -12,9 +12,9 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 10
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
       - name: Verify categories and create seed discussions
-        uses: actions/github-script@v7
+        uses: actions/github-script@v8
         with:
           script: |
             const fs = require('fs');
@@ -31,21 +31,37 @@ jobs:
             }`;
             const data = await github.graphql(query, { owner, name });
             const repo = data.repository;
-            const bySlug = new Map(repo.discussionCategories.nodes.map(category => [category.slug, category]));
+            const actualCategories = [...repo.discussionCategories.nodes]
+              .sort((left, right) => left.slug.localeCompare(right.slug));
+            const observed = actualCategories
+              .map(category => `${category.slug} => ${category.name} (answerable=${category.isAnswerable})`)
+              .join('; ');
+            core.info(`Observed Discussion categories (${actualCategories.length}): ${observed}`);
+
+            const bySlug = new Map(actualCategories.map(category => [category.slug, category]));
             const missing = expected.filter(category => !bySlug.has(category.slug));
             if (missing.length) {
-              core.setFailed(`Missing Discussion categories: ${missing.map(category => category.slug).join(', ')}`);
+              core.setFailed(
+                `Missing Discussion categories: ${missing.map(category => category.slug).join(', ')}. ` +
+                `Observed: ${observed}`,
+              );
               return;
             }
             for (const category of expected) {
               const actual = bySlug.get(category.slug);
               if (actual.name !== category.name) {
-                core.setFailed(`Discussion category ${category.slug} has name ${actual.name}, expected ${category.name}`);
+                core.setFailed(
+                  `Discussion category ${category.slug} has name ${actual.name}, expected ${category.name}. ` +
+                  `Observed: ${observed}`,
+                );
                 return;
               }
               const shouldAnswer = category.format === 'question-and-answer';
               if (actual.isAnswerable !== shouldAnswer) {
-                core.setFailed(`Discussion category ${category.slug} answerable=${actual.isAnswerable}, expected ${shouldAnswer}`);
+                core.setFailed(
+                  `Discussion category ${category.slug} answerable=${actual.isAnswerable}, expected ${shouldAnswer}. ` +
+                  `Observed: ${observed}`,
+                );
                 return;
               }
             }

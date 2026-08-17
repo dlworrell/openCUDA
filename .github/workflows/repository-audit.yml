@@ -23,9 +23,9 @@ jobs:
     env:
       STRICT: ${{ inputs.strict }}
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
       - name: Audit live GitHub state
-        uses: actions/github-script@v7
+        uses: actions/github-script@v8
         with:
           script: |
             const fs = require('fs');
@@ -65,7 +65,13 @@ jobs:
                 }
               }`;
               const result = await github.graphql(query, { owner, repo });
-              const actual = new Map(result.repository.discussionCategories.nodes.map(item => [item.slug, item]));
+              const actualNodes = [...result.repository.discussionCategories.nodes]
+                .sort((left, right) => left.slug.localeCompare(right.slug));
+              const observed = actualNodes
+                .map(item => `${item.slug} => ${item.name} (answerable=${item.isAnswerable})`)
+                .join('; ');
+              notes.push(`Observed Discussion categories: ${observed}`);
+              const actual = new Map(actualNodes.map(item => [item.slug, item]));
               for (const expected of contract.categories) {
                 const category = actual.get(expected.slug);
                 if (!category) {

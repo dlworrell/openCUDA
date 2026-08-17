@@ -8,11 +8,11 @@ permissions:
 
 jobs:
   kepler:
-    # Register the DL380p runner with all four labels before enabling this workflow.
+    # Register the DL380p runner with all four labels and runner >= v2.327.1 before enabling this workflow.
     runs-on: [self-hosted, linux, x64, kepler]
     timeout-minutes: 30
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
       - name: Host diagnostics
         run: ./scripts/diagnose_kepler_host.sh
       - name: Configure CUDA 11.x backend

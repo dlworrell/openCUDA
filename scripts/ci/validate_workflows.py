@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Static security checks for GitHub Actions workflow files."""
+"""Static security and runtime-support checks for GitHub Actions workflows."""
 
 from __future__ import annotations
 
@@ -13,6 +13,11 @@ import yaml
 
 ROOT = Path(__file__).resolve().parents[2]
 ALLOWED_ACTION_OWNERS = {"actions"}
+MINIMUM_ACTION_MAJOR = {
+    "actions/checkout": 5,
+    "actions/github-script": 8,
+    "actions/setup-python": 6,
+}
 UNTRUSTED_EXPRESSIONS = (
     "github.event.issue.body",
     "github.event.issue.title",
@@ -41,6 +46,11 @@ def _iter_steps(document: dict[Any, Any]):
         for index, step in enumerate(job.get("steps", [])):
             if isinstance(step, dict):
                 yield job_name, index, step
+
+
+def _action_major(ref: str) -> int | None:
+    match = re.fullmatch(r"v(\d+)(?:\.\d+(?:\.\d+)?)?", ref)
+    return int(match.group(1)) if match else None
 
 
 def validate(path: Path) -> list[str]:
@@ -81,6 +91,13 @@ def validate(path: Path) -> list[str]:
                     errors.append(
                         f"{path}:{job_name}[{index}]: action ref {ref!r} must be "
                         "a version tag or full SHA"
+                    )
+                minimum_major = MINIMUM_ACTION_MAJOR.get(action)
+                major = _action_major(ref)
+                if minimum_major is not None and major is not None and major < minimum_major:
+                    errors.append(
+                        f"{path}:{job_name}[{index}]: {action}@{ref} uses an obsolete "
+                        f"runtime; require v{minimum_major}+ or a reviewed full-SHA pin"
                     )
 
         run = step.get("run")

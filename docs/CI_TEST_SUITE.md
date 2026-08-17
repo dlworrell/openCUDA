@@ -10,7 +10,7 @@ openCUDA uses five complementary layers.
 |---|---|---|
 | Portable build/test | `portable-ci` | Compile and test the portable C17/C++20/assembly/Python implementation on supported development platforms. |
 | Source/repository compliance | `compliance-ci` | Enforce repository hygiene, source-policy, ABI, formatting, static-analysis, sanitizer, GitHub-form, workflow-security, and content-policy checks. |
-| Collaboration moderation | `content-moderation` | Scan new/edited Discussions, comments, Issues, PR descriptions, and review comments and route violations for human review. |
+| Collaboration moderation | `content-moderation` | Scan new/edited Discussions, comments, Issues, PR descriptions/reviews, and review comments and route violations for human review. |
 | Live repository audit | `repository-audit` | Compare live GitHub settings, labels, categories, and protected-branch state with the repository policy. |
 | Legacy hardware validation | `kepler-hardware-ci` | Validate CUDA 11.x / `sm_37` behavior on the self-hosted Kepler reference runner. |
 
@@ -72,7 +72,8 @@ It verifies:
 - every Issue form has a valid body structure and unique control IDs;
 - every Discussion category form matches the slug contract in `config/discussion-categories.json`;
 - Polls remain form-less;
-- the Issue-routing table is structurally valid and only references documented taxonomy/governance labels;
+- every Issue-routing selector corresponds to a real rendered dropdown choice;
+- the Issue-routing table only references documented taxonomy/governance labels;
 - all required workflow files exist and parse.
 
 `config/discussion-categories.json` is the machine-readable source of truth for the expected Discussion category inventory. `config/issue-routing.json` is the machine-readable source of truth for form-selection-to-label routing.
@@ -98,7 +99,7 @@ Untrusted collaboration text is read from GitHub's event JSON file by Python rat
 
 Repository CI rejects prohibited collaboration language from ordinary source, comments, documentation, workflow text, and project metadata. The policy-data file and its unit test are excluded from the repository scan because the detector must contain its own vocabulary.
 
-The scanner stores/report rule IDs, categories, paths, and line numbers. It does not need to echo the triggering vocabulary in normal CI output.
+The scanner stores/reports rule IDs, categories, paths, and line numbers. It does not need to echo the triggering vocabulary in normal CI output.
 
 ## Runtime collaboration moderation
 
@@ -109,9 +110,12 @@ The scanner stores/report rule IDs, categories, paths, and line numbers. It does
 - an Issue;
 - an Issue/PR conversation comment;
 - a Pull Request title/body;
+- a Pull Request review body;
 - a Pull Request review comment.
 
-The workflow passes the GitHub event JSON path directly to `scripts/ci/moderate_event.py`. User text is never interpolated into shell source.
+The workflow passes the GitHub event JSON path directly to `scripts.ci.moderate_event`. User text is never interpolated into shell source.
+
+`python/tests/test_moderate_event.py` exercises every supported event adapter, verifies source metadata/actor extraction, verifies policy findings reach the moderation layer, and rejects unsupported event types. The tests derive prohibited test terms from the policy file instead of reproducing them in fixtures.
 
 ### Blocking text findings
 
@@ -144,10 +148,10 @@ It checks live GitHub state that cannot be proven from repository files alone:
 - Issues enabled;
 - Discussions enabled;
 - default branch protection enabled;
-- required taxonomy/routing labels present;
+- required taxonomy/routing/moderation labels present;
 - expected Discussion category slugs/names present;
 - Q&A categories are answerable;
-- required governance/CI files exist on the default branch.
+- required governance/CI/moderation files exist on the default branch.
 
 Scheduled audits report drift as warnings. A manual run with `strict=true` fails on drift and is the acceptance test used when completing repository-administration work such as Issues #4 and #6.
 

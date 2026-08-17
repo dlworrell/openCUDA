@@ -36,7 +36,9 @@ def extract(payload: dict[str, Any], event_name: str) -> tuple[str, dict[str, An
         text = str(comment.get("body", ""))
         meta = {
             "source_kind": "discussion_comment",
-            "source_key": f"discussion-comment:{comment.get('node_id', comment.get('id'))}",
+            "source_key": (
+                f"discussion-comment:{comment.get('node_id', comment.get('id'))}"
+            ),
             "number": comment.get("id"),
             "parent_number": discussion.get("number"),
             "parent_node_id": discussion.get("node_id"),
@@ -80,6 +82,19 @@ def extract(payload: dict[str, Any], event_name: str) -> tuple[str, dict[str, An
             "url": item.get("html_url"),
             "actor": _user_login(item.get("user")),
         }
+    elif event_name == "pull_request_review":
+        review = payload["review"]
+        pull_request = payload["pull_request"]
+        text = str(review.get("body", ""))
+        meta = {
+            "source_kind": "pull_request_review",
+            "source_key": f"pull-request-review:{review.get('id')}",
+            "number": review.get("id"),
+            "parent_number": pull_request.get("number"),
+            "parent_node_id": pull_request.get("node_id"),
+            "url": review.get("html_url") or pull_request.get("html_url"),
+            "actor": _user_login(review.get("user")),
+        }
     elif event_name == "pull_request_review_comment":
         comment = payload["comment"]
         pull_request = payload["pull_request"]
@@ -109,15 +124,21 @@ def main(argv: list[str] | None = None) -> int:
     text, meta = extract(payload, args.event_name)
     policy = load_policy()
     findings = scan_text(text, policy, source=meta["source_key"], include_media=True)
+    blocking = any(
+        severity_at_least(item.severity, "warn", policy) for item in findings
+    )
     meta.update(
         {
             "content_sha256": content_hash(text),
             "findings": [asdict(item) for item in findings],
-            "blocking": any(severity_at_least(item.severity, "warn", policy) for item in findings),
+            "blocking": blocking,
             "requires_review": bool(findings),
         }
     )
-    args.output.write_text(json.dumps(meta, indent=2, sort_keys=True) + "\n", encoding="utf-8")
+    args.output.write_text(
+        json.dumps(meta, indent=2, sort_keys=True) + "\n",
+        encoding="utf-8",
+    )
     print(f"moderation: {len(findings)} finding(s); source={meta['source_key']}")
     return 0
 

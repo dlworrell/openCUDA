@@ -1,0 +1,52 @@
+name: Documentation change
+description: Propose a tracked engineering-documentation correction or addition.
+title: '[Docs] '
+labels:
+- documentation
+- developmental
+- developmental:documentation
+- role
+- role:documentation-approver
+body:
+- type: markdown
+  attributes:
+    value: Documentation is an engineering artifact. Policy/architecture/compatibility/security/governance documents also require their domain approver.
+- type: dropdown
+  id: document
+  attributes:
+    label: Document class
+    description: Select the affected documentation.
+    options:
+    - README / contributor docs
+    - Architecture
+    - Compatibility
+    - Development
+    - Reference platform
+    - Roadmap
+    - Governance / role assignments
+    - Security
+    - Discussion / issue workflow
+    - Other
+  validations:
+    required: true
+- type: textarea
+  id: problem
+  attributes:
+    label: Problem / gap
+    description: What is inaccurate, missing, stale, or unclear?
+  validations:
+    required: true
+- type: textarea
+  id: proposed
+  attributes:
+    label: Proposed correction
+    description: Describe the intended documentation outcome.
+  validations:
+    required: true
+- type: textarea
+  id: evidence
+  attributes:
+    label: Evidence / source
+    description: Link source code, measurements, upstream documentation, or decision records.
+  validations:
+    required: false

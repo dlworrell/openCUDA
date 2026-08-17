@@ -1,0 +1,44 @@
+title: '[RFC] '
+labels:
+- discussion
+- discussion:rfc
+- architectural
+body:
+- type: markdown
+  attributes:
+    value: Architecture RFCs are pre-implementation design records. A decision should identify the affected ABI/component boundaries, alternatives, compatibility impact, and required approvers.
+- type: textarea
+  id: problem
+  attributes:
+    label: Problem statement
+    description: What architectural problem is being solved?
+  validations:
+    required: true
+- type: textarea
+  id: proposal
+  attributes:
+    label: Proposed design
+    description: Describe interfaces, boundaries, data flow, ownership, and invariants.
+  validations:
+    required: true
+- type: textarea
+  id: alternatives
+  attributes:
+    label: Alternatives considered
+    description: List credible alternatives and tradeoffs.
+  validations:
+    required: true
+- type: textarea
+  id: compatibility
+  attributes:
+    label: Compatibility impact
+    description: Describe effects on Kepler, sm_37, CUDA 11/R470, other hosts, or future backends.
+  validations:
+    required: false
+- type: textarea
+  id: acceptance
+  attributes:
+    label: Decision / acceptance criteria
+    description: What evidence or agreement is required before this RFC can become implementation work?
+  validations:
+    required: true

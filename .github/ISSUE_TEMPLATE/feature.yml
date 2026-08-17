@@ -1,28 +1,58 @@
-name: Feature proposal
-description: Propose a compatibility, backend, tooling, or API enhancement
-title: "enhancement: "
-labels: ["enhancement"]
+name: Implementation request
+description: Request implementation of an already-scoped capability or enhancement.
+title: '[Enhancement] '
+labels:
+- enhancement
+- roadmap
+- role
+- role:task-manager
 body:
-  - type: textarea
-    id: problem
-    attributes:
-      label: Problem
-      description: What compatibility or development problem should this solve?
-    validations:
-      required: true
-  - type: textarea
-    id: proposal
-    attributes:
-      label: Proposed approach
-    validations:
-      required: true
-  - type: dropdown
-    id: behavior
-    attributes:
-      label: Expected compatibility class
-      options:
-        - Native
-        - Lowerable
-        - CPU fallback
-        - Tooling only
-        - Not sure
+- type: markdown
+  attributes:
+    value: Early-stage ideas belong in Discussions. Use this form when the requested outcome is sufficiently scoped to become tracked implementation work.
+- type: textarea
+  id: origin
+  attributes:
+    label: Origin / decision record
+    description: Link the Discussion/RFC/issue/roadmap record that established the need.
+  validations:
+    required: false
+- type: dropdown
+  id: phase
+  attributes:
+    label: Roadmap phase
+    description: Select the intended phase.
+    options:
+    - Phase 0 — Bootstrap
+    - Phase 1 — Hardware discovery
+    - Phase 2 — Legacy execution service
+    - Phase 3 — Scheduler
+    - Phase 4 — Numerical libraries
+    - Phase 5 — Compiler/lowering
+    - Phase 6 — Python/scientific front ends
+    - Phase 7 — PyTorch kepler backend
+    - Phase 8 — General legacy CUDA framework
+    - Cross-phase / unassigned
+  validations:
+    required: true
+- type: textarea
+  id: outcome
+  attributes:
+    label: Required outcome
+    description: Describe the observable capability to implement.
+  validations:
+    required: true
+- type: textarea
+  id: acceptance
+  attributes:
+    label: Acceptance criteria
+    description: List testable completion criteria.
+  validations:
+    required: true
+- type: textarea
+  id: dependencies
+  attributes:
+    label: Dependencies / blockers
+    description: Link prerequisite issues, discussions, or PRs.
+  validations:
+    required: false

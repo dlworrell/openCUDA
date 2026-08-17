@@ -1,0 +1,37 @@
+title: '[Development Help] '
+labels:
+- discussion
+- discussion:question
+- developmental
+body:
+- type: markdown
+  attributes:
+    value: Q&A for building, testing, toolchains, C/C++/Python/assembly/CUDA development, and contributor workflow. Use an issue when a reproducible defect in openCUDA itself has been established.
+- type: input
+  id: environment
+  attributes:
+    label: Development environment
+    description: OS, architecture, compiler/CMake/Python versions, and CUDA version if relevant.
+  validations:
+    required: true
+- type: textarea
+  id: goal
+  attributes:
+    label: What are you trying to do?
+    description: Describe the expected development task or build/test goal.
+  validations:
+    required: true
+- type: textarea
+  id: attempted
+  attributes:
+    label: What have you tried?
+    description: Include commands and concise errors/log excerpts.
+  validations:
+    required: true
+- type: textarea
+  id: question
+  attributes:
+    label: Specific question
+    description: State the question that should be answered.
+  validations:
+    required: true

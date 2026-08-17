@@ -1,0 +1,37 @@
+title: '[Hardware] '
+labels:
+- discussion
+- discussion:research
+- reference
+body:
+- type: markdown
+  attributes:
+    value: Use for reference hardware, PCIe/NUMA topology, K80/GK210/CUBIX behavior, ECC/P2P observations, and candidate legacy accelerator platforms.
+- type: input
+  id: platform
+  attributes:
+    label: Platform
+    description: Identify the host, enclosure, accelerator, CPU, OS, and driver/toolkit where relevant.
+  validations:
+    required: true
+- type: textarea
+  id: observation
+  attributes:
+    label: Observation / question
+    description: Describe the hardware behavior or research question.
+  validations:
+    required: true
+- type: textarea
+  id: evidence
+  attributes:
+    label: Measurements / evidence
+    description: Include commands, logs, topology output, benchmark methodology, or authoritative specifications.
+  validations:
+    required: false
+- type: textarea
+  id: repro
+  attributes:
+    label: Reproduction / validation plan
+    description: Explain how another validator can reproduce or challenge the result.
+  validations:
+    required: false

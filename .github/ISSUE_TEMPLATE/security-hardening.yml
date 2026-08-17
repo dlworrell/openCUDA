@@ -1,0 +1,52 @@
+name: Security hardening task
+description: Track non-sensitive security hardening, containment, or policy work.
+title: '[Security Hardening] '
+labels:
+- operational
+- operational:security
+- role
+- role:security-reviewer
+body:
+- type: markdown
+  attributes:
+    value: Do not disclose an exploitable vulnerability, secret, credential, or private key here. Follow SECURITY.md for sensitive reporting.
+- type: dropdown
+  id: scope
+  attributes:
+    label: Scope
+    description: Select the affected area.
+    options:
+    - Legacy driver containment
+    - Build/dependency security
+    - GitHub Actions / permissions
+    - Secrets policy
+    - Daemon/process isolation
+    - Memory/input validation
+    - Release integrity
+    - Security documentation
+    - Other
+  validations:
+    required: true
+- type: textarea
+  id: hardening
+  attributes:
+    label: Hardening objective
+    description: Describe the preventive or defensive change without exposing sensitive exploit details.
+  validations:
+    required: true
+- type: textarea
+  id: acceptance
+  attributes:
+    label: Acceptance criteria
+    description: Define verification tests or policy evidence.
+  validations:
+    required: true
+- type: checkboxes
+  id: confirm
+  attributes:
+    label: Disclosure check
+    options:
+    - label: This issue does not disclose a live vulnerability or secret.
+      required: true
+    - label: I reviewed SECURITY.md before submitting.
+      required: true

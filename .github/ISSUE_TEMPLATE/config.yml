@@ -1,0 +1,20 @@
+blank_issues_enabled: false
+contact_links:
+  - name: RFC / architecture discussion
+    url: https://github.com/dlworrell/openCUDA/discussions/categories/rfc-architecture
+    about: Explore architecture and ABI changes before implementation work is opened.
+  - name: Compatibility research
+    url: https://github.com/dlworrell/openCUDA/discussions/categories/compatibility-research
+    about: Investigate native support, lowering, substitution, fallback, or unsupported behavior.
+  - name: Ideas and proposals
+    url: https://github.com/dlworrell/openCUDA/discussions/categories/ideas-proposals
+    about: Propose changes that are not yet scoped as implementation tasks.
+  - name: Development help / Q&A
+    url: https://github.com/dlworrell/openCUDA/discussions/categories/development-help
+    about: Ask build, toolchain, language, or contributor-workflow questions.
+  - name: General questions
+    url: https://github.com/dlworrell/openCUDA/discussions/categories/questions
+    about: Ask general openCUDA usage, design-intent, or documentation questions.
+  - name: Sensitive security reporting
+    url: https://github.com/dlworrell/openCUDA/security/policy
+    about: Review the security policy before reporting sensitive vulnerabilities or credentials.

@@ -1,0 +1,37 @@
+title: '[Governance] '
+labels:
+- discussion
+- role
+- access
+body:
+- type: markdown
+  attributes:
+    value: Use for governance policy, role delegation, administration levels, moderation, process changes, and unresolved cross-domain decisions. Do not post secrets or security-sensitive credentials.
+- type: textarea
+  id: topic
+  attributes:
+    label: Governance topic
+    description: Describe the policy, delegation, process, or administrative question.
+  validations:
+    required: true
+- type: textarea
+  id: current
+  attributes:
+    label: Current rule / state
+    description: Link the relevant governance, role-assignment, CODEOWNERS, or issue record.
+  validations:
+    required: true
+- type: textarea
+  id: proposed
+  attributes:
+    label: Proposed outcome
+    description: State the proposed decision or change.
+  validations:
+    required: true
+- type: textarea
+  id: authority
+  attributes:
+    label: Required authority / approvers
+    description: Identify the roles or administration level needed to decide this item.
+  validations:
+    required: false

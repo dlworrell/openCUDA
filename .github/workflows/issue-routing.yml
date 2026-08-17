@@ -1,0 +1,58 @@
+name: issue-routing
+
+on:
+  issues:
+    types: [opened, edited]
+
+permissions:
+  contents: read
+  issues: write
+
+jobs:
+  route:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Apply structured taxonomy labels
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const body = context.payload.issue.body || "";
+            const labels = new Set();
+            const rules = [
+              ["Phase 0 — Bootstrap", "roadmap:phase-0-bootstrap"],
+              ["Phase 1 — Hardware discovery", "roadmap:phase-1-hardware-discovery"],
+              ["Phase 2 — Legacy execution service", "roadmap:phase-2-execution-service"],
+              ["Phase 3 — Scheduler", "roadmap:phase-3-scheduler"],
+              ["Phase 4 — Numerical libraries", "roadmap:phase-4-numerical-libraries"],
+              ["Phase 5 — Compiler/lowering", "roadmap:phase-5-compiler-lowering"],
+              ["Phase 6 — Python/scientific front ends", "roadmap:phase-6-python-scientific"],
+              ["Phase 7 — PyTorch kepler backend", "roadmap:phase-7-pytorch-kepler"],
+              ["Phase 8 — General legacy CUDA framework", "roadmap:phase-8-general-framework"],
+              ["### Compatibility class\n\nNative", "compatibility:native"],
+              ["### Compatibility class\n\nLowering", "compatibility:lowering"],
+              ["### Compatibility class\n\nSubstitution", "compatibility:substitution"],
+              ["### Compatibility class\n\nCPU fallback", "compatibility:cpu-fallback"],
+              ["### Compatibility class\n\nUnsupported", "compatibility:unsupported"],
+              ["### Target\n\nKepler / Tesla K80", "compatibility:kepler"],
+              ["### Target\n\nsm_37", "compatibility:sm37"],
+              ["### Target\n\nCUDA 11.x", "compatibility:cuda11"],
+              ["### Target\n\nR470 driver", "compatibility:r470"],
+              ["### Target\n\nLegacy CUDA library", "compatibility:legacy-library"],
+              ["### Target\n\nPyTorch / PrivateUse1", "compatibility:pytorch"],
+              ["### Target\n\nFuture retired GPU generation", "compatibility:future-generation"],
+              ["### Document class\n\nArchitecture", "role:architecture-approver"],
+              ["### Document class\n\nCompatibility", "role:compatibility-approver"],
+              ["### Document class\n\nReference platform", "role:hardware-validator"],
+              ["### Document class\n\nSecurity", "role:security-reviewer"],
+              ["### Document class\n\nGovernance / role assignments", "role:project-owner"]
+            ];
+            for (const [needle, label] of rules) if (body.includes(needle)) labels.add(label);
+            if (body.includes("### Target\n\nKepler / Tesla K80")) labels.add("reference:tesla-k80");
+            if (body.includes("### Target\n\nPyTorch / PrivateUse1")) labels.add("reference:pytorch-privateuse1");
+            if (!labels.size) return;
+            await github.rest.issues.addLabels({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              issue_number: context.payload.issue.number,
+              labels: [...labels]
+            });

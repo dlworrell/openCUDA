@@ -1,0 +1,62 @@
+name: Compatibility gap / decision
+description: Track a confirmed compatibility behavior, lowering/substitution task, fallback, or unsupported boundary.
+title: '[Compatibility] '
+labels:
+- compatibility
+- role
+- role:compatibility-approver
+body:
+- type: markdown
+  attributes:
+    value: Exploratory compatibility questions belong in the Compatibility Research Discussion category. Use this issue form once the behavior is reproducible or a decision requires tracked implementation.
+- type: dropdown
+  id: target
+  attributes:
+    label: Target
+    description: Select the compatibility target.
+    options:
+    - Kepler / Tesla K80
+    - sm_37
+    - CUDA 11.x
+    - R470 driver
+    - Legacy CUDA library
+    - PyTorch / PrivateUse1
+    - Future retired GPU generation
+    - Cross-generation / general
+  validations:
+    required: true
+- type: dropdown
+  id: class
+  attributes:
+    label: Compatibility class
+    description: Current intended behavior.
+    options:
+    - Native
+    - Lowering
+    - Substitution
+    - CPU fallback
+    - Unsupported
+    - Needs decision
+  validations:
+    required: true
+- type: textarea
+  id: evidence
+  attributes:
+    label: Evidence / source
+    description: Link the research Discussion, upstream docs, test output, or reproducer.
+  validations:
+    required: true
+- type: textarea
+  id: work
+  attributes:
+    label: Required work
+    description: Describe implementation/documentation/tests needed.
+  validations:
+    required: true
+- type: textarea
+  id: correctness
+  attributes:
+    label: Correctness criteria
+    description: State how correctness and honest capability reporting will be verified.
+  validations:
+    required: true

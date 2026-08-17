@@ -1,0 +1,61 @@
+name: Governance / administration task
+description: Track an approved governance, role, access, ruleset, moderation, or repository-administration change.
+title: '[Governance] '
+labels:
+- operational
+- role
+- access
+- role:repository-admin
+- access:l6-repository-admin
+body:
+- type: markdown
+  attributes:
+    value: General governance proposals should start in the Governance Discussion category. Use this issue for approved/required administrative work. Never place credentials or secrets in an issue.
+- type: textarea
+  id: authority
+  attributes:
+    label: Authority / decision record
+    description: Link the governance Discussion, Project Owner decision, or policy requirement.
+  validations:
+    required: true
+- type: dropdown
+  id: scope
+  attributes:
+    label: Administrative scope
+    description: Select the area.
+    options:
+    - Role assignment/revocation
+    - Repository collaborator/access
+    - Branch protection/ruleset
+    - CODEOWNERS/review routing
+    - Discussion moderation/categories
+    - Issue forms/routing
+    - Secrets/security settings
+    - Release/repository settings
+    - Organization transfer/roles
+    - Other
+  validations:
+    required: true
+- type: textarea
+  id: change
+  attributes:
+    label: Required change
+    description: Describe the exact administrative action.
+  validations:
+    required: true
+- type: textarea
+  id: verification
+  attributes:
+    label: Verification
+    description: How will the resulting permission/configuration be verified?
+  validations:
+    required: true
+- type: checkboxes
+  id: confirm
+  attributes:
+    label: Safety confirmation
+    options:
+    - label: No passwords, tokens, credentials, or private keys are included.
+      required: true
+    - label: The requested privilege follows the least-privilege rules in GOVERNANCE.md.
+      required: true

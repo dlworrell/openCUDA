@@ -1,0 +1,28 @@
+title: '[Announcement] '
+labels:
+- discussion
+body:
+- type: markdown
+  attributes:
+    value: Maintainer announcements only. Use this category for project-level updates, releases, policy changes, and time-sensitive notices.
+- type: textarea
+  id: summary
+  attributes:
+    label: Announcement
+    description: State the update and why it matters.
+  validations:
+    required: true
+- type: input
+  id: effective
+  attributes:
+    label: Effective date / release
+    description: Provide a date, release, or milestone if applicable.
+  validations:
+    required: false
+- type: textarea
+  id: action
+  attributes:
+    label: Required action
+    description: State what maintainers, contributors, or users should do next.
+  validations:
+    required: false

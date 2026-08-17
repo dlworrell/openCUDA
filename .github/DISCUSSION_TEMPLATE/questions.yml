@@ -1,0 +1,22 @@
+title: '[Question] '
+labels:
+- discussion
+- discussion:question
+body:
+- type: markdown
+  attributes:
+    value: General Q&A about openCUDA behavior, design intent, documentation, or usage. Reproducible defects belong in Issues.
+- type: textarea
+  id: question
+  attributes:
+    label: Question
+    description: Ask one focused question.
+  validations:
+    required: true
+- type: textarea
+  id: context
+  attributes:
+    label: Context
+    description: Provide enough context, links, versions, or hardware information for a useful answer.
+  validations:
+    required: false

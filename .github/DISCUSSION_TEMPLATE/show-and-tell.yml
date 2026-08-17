@@ -1,0 +1,35 @@
+title: '[Show & Tell] '
+labels:
+- discussion
+body:
+- type: markdown
+  attributes:
+    value: Share experiments, prototypes, integrations, benchmarks, visualizations, or workloads built with openCUDA or relevant legacy-GPU techniques.
+- type: textarea
+  id: project
+  attributes:
+    label: What did you build or test?
+    description: Describe the experiment or result.
+  validations:
+    required: true
+- type: textarea
+  id: how
+  attributes:
+    label: How it works
+    description: Explain the hardware/software setup and relevant implementation details.
+  validations:
+    required: true
+- type: textarea
+  id: results
+  attributes:
+    label: Results / artifacts
+    description: Share measurements, screenshots, repositories, or lessons learned.
+  validations:
+    required: false
+- type: textarea
+  id: next
+  attributes:
+    label: What feedback would help?
+    description: State what kind of review, ideas, or collaboration you want.
+  validations:
+    required: false

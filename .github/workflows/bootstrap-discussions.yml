@@ -1,0 +1,53 @@
+name: bootstrap-discussions
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  discussions: write
+
+jobs:
+  seed:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Verify categories and create seed discussions
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const owner = context.repo.owner;
+            const name = context.repo.repo;
+            const expected = [
+              "general", "roadmap-planning", "rfc-architecture", "compatibility-research",
+              "ideas-proposals", "hardware-reference-platforms", "benchmarks-performance",
+              "development-help", "questions", "show-and-tell", "governance"
+            ];
+            const query = `query($owner:String!, $name:String!) { repository(owner:$owner, name:$name) { id discussionCategories(first:50) { nodes { id name slug } } discussions(first:100) { nodes { title } } } }`;
+            const data = await github.graphql(query, { owner, name });
+            const repo = data.repository;
+            const bySlug = new Map(repo.discussionCategories.nodes.map(c => [c.slug, c]));
+            const missing = expected.filter(slug => !bySlug.has(slug));
+            if (missing.length) {
+              core.setFailed(`Missing Discussion categories: ${missing.join(", ")}`);
+              return;
+            }
+            const existing = new Set(repo.discussions.nodes.map(d => d.title));
+            const seeds = [
+              ["general", "Welcome to openCUDA Discussions", "Use specialized categories for design, compatibility, hardware, benchmarks, development help, proposals, questions, and governance. Promote implementation-ready work with Create issue from discussion."],
+              ["roadmap-planning", "Roadmap planning index", "Coordinate phase sequencing, dependencies, and cross-phase planning around docs/ROADMAP.md."],
+              ["rfc-architecture", "Architecture RFC index", "RFCs identify the problem, design, alternatives, compatibility impact, and decision criteria."],
+              ["compatibility-research", "Compatibility research index", "Research native execution, lowering, substitution, CPU fallback, unsupported behavior, toolchain boundaries, legacy libraries, and future retired GPUs."],
+              ["ideas-proposals", "Idea and proposal intake", "Use this category for concrete ideas that are not yet implementation-ready."],
+              ["hardware-reference-platforms", "Reference platform validation index", "Coordinate reference topology, NUMA, PCIe, P2P, ECC, bandwidth, and hardware evidence here."],
+              ["benchmarks-performance", "Benchmark methodology and baseline index", "Define reproducible benchmark methodology and interpret performance data here."],
+              ["development-help", "Development help and build Q&A", "Ask contributor questions about languages, CMake, testing, packaging, CI, and development environments."],
+              ["questions", "openCUDA project Q&A", "Ask general questions about project behavior, design intent, documentation, and usage."],
+              ["show-and-tell", "Experiments and prototypes showcase", "Share experiments, prototypes, integrations, workloads, visualizations, and results."],
+              ["governance", "Governance and role delegation index", "Discuss governance policy, role delegation, administration, moderation, process, ownership, and cross-domain decisions here."]
+            ];
+            const mutation = `mutation($repositoryId:ID!, $categoryId:ID!, $title:String!, $body:String!) { createDiscussion(input:{repositoryId:$repositoryId, categoryId:$categoryId, title:$title, body:$body}) { discussion { url } } }`;
+            for (const [slug, title, body] of seeds) {
+              if (existing.has(title)) continue;
+              const result = await github.graphql(mutation, { repositoryId: repo.id, categoryId: bySlug.get(slug).id, title, body });
+              core.info(`Created: ${result.createDiscussion.discussion.url}`);
+            }

@@ -1,0 +1,40 @@
+title: '[Roadmap] '
+labels:
+- discussion
+- roadmap
+body:
+- type: markdown
+  attributes:
+    value: Use for sequencing, phase boundaries, dependencies, and milestone planning. Implementation-ready work should be promoted to an issue.
+- type: dropdown
+  id: phase
+  attributes:
+    label: Roadmap phase
+    description: Select the phase most affected.
+    options:
+    - Phase 0 — Bootstrap
+    - Phase 1 — Hardware discovery
+    - Phase 2 — Legacy execution service
+    - Phase 3 — Scheduler
+    - Phase 4 — Numerical libraries
+    - Phase 5 — Compiler/lowering
+    - Phase 6 — Python/scientific front ends
+    - Phase 7 — PyTorch kepler backend
+    - Phase 8 — General legacy CUDA framework
+    - Cross-phase / not yet assigned
+  validations:
+    required: true
+- type: textarea
+  id: proposal
+  attributes:
+    label: Planning proposal
+    description: Describe the desired sequencing or scope change.
+  validations:
+    required: true
+- type: textarea
+  id: dependencies
+  attributes:
+    label: Dependencies / blockers
+    description: List prerequisites, blockers, or work that becomes unblocked.
+  validations:
+    required: false

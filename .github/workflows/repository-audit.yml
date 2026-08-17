@@ -47,7 +47,10 @@ jobs:
             })).map(item => item.name));
             const routing = JSON.parse(fs.readFileSync('config/issue-routing.json', 'utf8'));
             const requiredLabels = new Set(routing.rules.flatMap(rule => rule.labels));
-            for (const label of ['operational', 'architectural', 'compatibility', 'developmental', 'discussion', 'reference', 'roadmap', 'role', 'access']) {
+            for (const label of [
+              'operational', 'architectural', 'compatibility', 'developmental', 'discussion',
+              'reference', 'roadmap', 'role', 'role:community-moderator', 'access',
+            ]) {
               requiredLabels.add(label);
             }
             for (const label of requiredLabels) {
@@ -91,6 +94,7 @@ jobs:
               'GOVERNANCE.md',
               'CODE_OF_CONDUCT.md',
               'docs/CI_TEST_SUITE.md',
+              'docs/CONTENT_MODERATION.md',
               'docs/ISSUES_AND_DISCUSSIONS.md',
             ];
             for (const path of requiredFiles) {

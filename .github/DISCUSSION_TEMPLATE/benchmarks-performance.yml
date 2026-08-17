@@ -1,0 +1,38 @@
+title: '[Benchmark] '
+labels:
+- discussion
+- discussion:benchmark-analysis
+- operational
+- operational:benchmarking
+body:
+- type: markdown
+  attributes:
+    value: Use for benchmark design, interpretation, baselines, regressions, and performance investigations. Raw claims should include enough methodology to reproduce them.
+- type: input
+  id: platform
+  attributes:
+    label: Platform / software stack
+    description: State hardware, OS, driver/toolkit, build, and relevant configuration.
+  validations:
+    required: true
+- type: textarea
+  id: method
+  attributes:
+    label: Methodology
+    description: Describe workload, dataset sizes, warmup, repetition count, clocks/power state, NUMA placement, and measurement method.
+  validations:
+    required: true
+- type: textarea
+  id: results
+  attributes:
+    label: Results
+    description: Provide measured values with units and uncertainty/variation where available.
+  validations:
+    required: true
+- type: textarea
+  id: analysis
+  attributes:
+    label: Analysis / decision
+    description: Explain what the results imply for openCUDA.
+  validations:
+    required: false

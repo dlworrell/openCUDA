@@ -1,0 +1,58 @@
+name: Hardware validation task
+description: Track reference-platform topology, ECC, P2P, PCIe, bandwidth, or hardware evidence work.
+title: '[Hardware Validation] '
+labels:
+- reference
+- operational
+- operational:hardware-ci
+- role
+- role:hardware-validator
+body:
+- type: markdown
+  attributes:
+    value: Use this for planned or reproducible reference-hardware validation. Exploratory hardware questions belong in Discussions.
+- type: input
+  id: platform
+  attributes:
+    label: Platform
+    description: Host/enclosure/GPU/OS/driver/toolkit combination.
+  validations:
+    required: true
+- type: dropdown
+  id: domain
+  attributes:
+    label: Validation domain
+    description: What is being validated?
+    options:
+    - PCIe topology / negotiated link
+    - NUMA affinity
+    - P2P matrix / bandwidth
+    - Host↔device bandwidth
+    - ECC / health telemetry
+    - Clock / power / thermal behavior
+    - Numerical correctness
+    - Hardware CI / runner
+    - Other
+  validations:
+    required: true
+- type: textarea
+  id: method
+  attributes:
+    label: Method
+    description: Commands, benchmark, dataset, repetitions, and controls.
+  validations:
+    required: true
+- type: textarea
+  id: acceptance
+  attributes:
+    label: Evidence required
+    description: Define the artifacts/measurements required for completion.
+  validations:
+    required: true
+- type: textarea
+  id: origin
+  attributes:
+    label: Related discussion / issue
+    description: Link prior research or roadmap work.
+  validations:
+    required: false

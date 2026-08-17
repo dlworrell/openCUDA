@@ -1,0 +1,36 @@
+title: '[Proposal] '
+labels:
+- discussion
+- discussion:proposal
+body:
+- type: markdown
+  attributes:
+    value: Use for concrete project improvements that are not yet implementation-ready. Mature proposals should move through the appropriate RFC/research path or be promoted to an issue.
+- type: textarea
+  id: proposal
+  attributes:
+    label: Proposal
+    description: What should change or be added?
+  validations:
+    required: true
+- type: textarea
+  id: value
+  attributes:
+    label: Why this belongs in openCUDA
+    description: Explain user/project value and how it fits the documented goals.
+  validations:
+    required: true
+- type: textarea
+  id: scope
+  attributes:
+    label: Expected scope
+    description: Identify likely components, platforms, or roadmap phases.
+  validations:
+    required: false
+- type: textarea
+  id: risks
+  attributes:
+    label: Risks / open questions
+    description: Call out compatibility, security, maintenance, or performance concerns.
+  validations:
+    required: false

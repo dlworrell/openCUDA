@@ -1,0 +1,109 @@
+name: compliance-ci
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  repository-policy:
+    name: repository-policy
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+          cache: pip
+      - name: Install development dependencies
+        run: python -m pip install -e '.[dev]'
+      - name: Repository/source compliance
+        run: python scripts/ci/repository_policy.py --root .
+      - name: GitHub form and routing contracts
+        run: python scripts/ci/validate_github_config.py --root .
+      - name: GitHub Actions security policy
+        run: python scripts/ci/validate_workflows.py --root .
+      - name: Repository content policy
+        run: python scripts/ci/content_policy.py --scan-repository . --fail-on warn
+      - name: Python lint
+        run: python -m ruff check python scripts
+      - name: Governance and moderation tests
+        run: >-
+          python -m pytest
+          python/tests/test_content_policy.py
+          python/tests/test_moderate_event.py
+          python/tests/test_repository_policy.py
+          python/tests/test_github_config.py
+
+  formatting-static-analysis:
+    name: formatting-static-analysis
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install LLVM tooling
+        run: sudo apt-get update && sudo apt-get install -y clang clang-format clang-tidy shellcheck
+      - name: clang-format
+        shell: bash
+        run: |
+          mapfile -d '' files < <(find include src tests -type f \( -name '*.c' -o -name '*.h' -o -name '*.cpp' -o -name '*.hpp' -o -name '*.cc' -o -name '*.cxx' -o -name '*.cu' -o -name '*.cuh' \) -print0)
+          if ((${#files[@]})); then clang-format --dry-run --Werror "${files[@]}"; fi
+      - name: ShellCheck
+        shell: bash
+        run: |
+          mapfile -d '' files < <(find scripts -type f -name '*.sh' -print0)
+          if ((${#files[@]})); then shellcheck "${files[@]}"; fi
+      - name: Configure compile database with warnings as errors
+        run: >-
+          CC=clang CXX=clang++ cmake -S . -B build-tidy
+          -DOPENCUDA_BUILD_TESTS=ON
+          -DOPENCUDA_ENABLE_LEGACY_CUDA=OFF
+          -DOPENCUDA_WARNINGS_AS_ERRORS=ON
+          -DCMAKE_EXPORT_COMPILE_COMMANDS=ON
+      - name: Build strict Clang configuration
+        run: cmake --build build-tidy --parallel
+      - name: clang-tidy
+        shell: bash
+        run: |
+          python - <<'PY'
+          import json
+          import subprocess
+          from pathlib import Path
+
+          commands = json.loads(Path('build-tidy/compile_commands.json').read_text(encoding='utf-8'))
+          files = sorted({entry['file'] for entry in commands if Path(entry['file']).suffix in {'.c', '.cc', '.cpp', '.cxx'}})
+          subprocess.run([
+              'clang-tidy', '-p=build-tidy',
+              "--warnings-as-errors=clang-analyzer-*,bugprone-*,performance-*,portability-*",
+              *files,
+          ], check=True)
+          PY
+
+  sanitizers:
+    name: sanitizers-linux
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - name: Configure ASan and UBSan
+        run: >-
+          cmake -S . -B build-sanitize
+          -DOPENCUDA_BUILD_TESTS=ON
+          -DOPENCUDA_ENABLE_LEGACY_CUDA=OFF
+          -DOPENCUDA_WARNINGS_AS_ERRORS=ON
+          -DCMAKE_BUILD_TYPE=Debug
+          -DCMAKE_C_FLAGS='-fsanitize=address,undefined -fno-omit-frame-pointer'
+          -DCMAKE_CXX_FLAGS='-fsanitize=address,undefined -fno-omit-frame-pointer'
+          -DCMAKE_EXE_LINKER_FLAGS='-fsanitize=address,undefined'
+      - name: Build
+        run: cmake --build build-sanitize --parallel
+      - name: Test under sanitizers
+        env:
+          ASAN_OPTIONS: detect_leaks=1:halt_on_error=1
+          UBSAN_OPTIONS: halt_on_error=1:print_stacktrace=1
+        run: ctest --test-dir build-sanitize --output-on-failure

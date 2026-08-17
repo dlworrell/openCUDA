@@ -1,0 +1,58 @@
+name: Build / CI failure
+description: Report or track CMake, compiler, packaging, CI, or self-hosted runner failures.
+title: '[Build/CI] '
+labels:
+- operational
+- operational:ci
+- developmental
+- role
+- role:ci-build-maintainer
+body:
+- type: markdown
+  attributes:
+    value: Provide enough detail to reproduce the failure locally or identify the workflow/job that failed.
+- type: dropdown
+  id: kind
+  attributes:
+    label: Failure type
+    description: Select the closest category.
+    options:
+    - CMake configure
+    - Native compile/link
+    - CTest
+    - Python packaging/install
+    - pytest/Ruff/mypy
+    - GitHub-hosted CI
+    - Self-hosted Kepler CI
+    - Dev container
+    - Other
+  validations:
+    required: true
+- type: input
+  id: run
+  attributes:
+    label: Workflow run / commit
+    description: URL or commit SHA, if applicable.
+  validations:
+    required: false
+- type: input
+  id: environment
+  attributes:
+    label: Environment
+    description: OS, architecture, compiler, CMake, Python, CUDA/driver if applicable.
+  validations:
+    required: true
+- type: textarea
+  id: failure
+  attributes:
+    label: Failure
+    description: Include the failing command and concise error.
+  validations:
+    required: true
+- type: textarea
+  id: repro
+  attributes:
+    label: Reproduction
+    description: Steps to reproduce outside the failing workflow if possible.
+  validations:
+    required: false

@@ -12,6 +12,7 @@ Apply `role` plus the qualified role label when an issue/PR must be handled, rev
 | `role:repository-admin` | Repository settings, access, rulesets, secrets, destructive/recovery, or other L6 administrative action. |
 | `role:maintainer` | Merge stewardship, branch/repository workflow, ordinary project management, or maintain-level action. |
 | `role:task-manager` | Issue triage, taxonomy, priority, assignment/reassignment, milestone, and queue management. |
+| `role:community-moderator` | Code-of-Conduct/content review, Discussion moderation, moderation-task disposition, and community-safety escalation. |
 | `role:code-reviewer` | Binding implementation review within an assigned code/component domain. |
 | `role:architecture-approver` | ABI/component/process/topology/scheduler/memory/transport architecture approval. |
 | `role:compatibility-approver` | CUDA-generation support, native/lowering/substitution/fallback/unsupported policy approval. |
@@ -61,6 +62,10 @@ A change to the public C ABI:
 A change to `.github/workflows/` that modifies secrets/permissions:
 
 `operational`, `operational:ci`, `operational:security`, `role`, `role:ci-build-maintainer`, `role:security-reviewer`; add `role:repository-admin` and `access:l6-repository-admin` only if repository-admin settings or secrets must actually be changed.
+
+A moderation report or content-policy change:
+
+`operational`, `discussion`, `role`, `role:community-moderator`; add `role:security-reviewer` when malicious links, credential exposure, or another security concern is involved.
 
 A role grant for a new architecture approver:
 

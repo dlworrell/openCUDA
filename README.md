@@ -16,6 +16,7 @@ The design is inspired by the compatibility philosophy used by OpenCore/OpenCore
 - Minimize CPU/GPU transfers and prefer long-lived device allocations, coarse-grained work units, pinned memory, streams, and peer-to-peer transfers when the topology supports them.
 - Provide future front ends for NumPy and PyTorch, including investigation of PyTorch `PrivateUse1` as an out-of-tree `kepler:` accelerator backend.
 - Remain useful as a general legacy-CUDA compatibility framework as additional GPU generations age out of current toolchains.
+- Treat CI, governance, Issues/Discussions routing, and collaboration moderation as versioned/tested engineering systems.
 
 ## What openCUDA is not
 
@@ -82,9 +83,13 @@ src/asm/                Architecture/OS assembly primitives
 src/legacy_cuda/        Optional CUDA 11.x / sm_37 backend
 python/opencuda/        Python package and future bindings
 scripts/                Diagnostics and developer tooling
-docs/                   Architecture, compatibility, governance, roadmap, discussion record
+scripts/ci/             Repository, workflow, form, and moderation compliance tooling
+config/                 Machine-readable routing, repository, Discussion, and content policies
+docs/                   Architecture, compatibility, governance, CI, roadmap, discussion record
 tests/                  Native tests
-.github/workflows/       Cross-platform CI
+.github/ISSUE_TEMPLATE/ Structured engineering/moderation Issue intake
+.github/DISCUSSION_TEMPLATE/ Structured Discussion category forms
+.github/workflows/       Build, compliance, routing, moderation, audit, and hardware workflows
 .github/CODEOWNERS       Review ownership/routing baseline
 ```
 
@@ -96,16 +101,22 @@ tests/                  Native tests
 - [`docs/REFERENCE_PLATFORM.md`](docs/REFERENCE_PLATFORM.md) — DL380p/CUBIX/K80 reference node
 - [`docs/DEVELOPMENT.md`](docs/DEVELOPMENT.md) — toolchains, build presets, CI, and coding workflow
 - [`docs/ROADMAP.md`](docs/ROADMAP.md) — staged implementation plan
+- [`docs/ISSUES_AND_DISCUSSIONS.md`](docs/ISSUES_AND_DISCUSSIONS.md) — intake categories, promotion lifecycle, routing, and bootstrap procedure
+- [`docs/CI_TEST_SUITE.md`](docs/CI_TEST_SUITE.md) — portable builds, compliance gates, live audit, and hardware validation
+- [`docs/CONTENT_MODERATION.md`](docs/CONTENT_MODERATION.md) — automated/human moderation operations and escalation
 - [`docs/LABEL_TAXONOMY.md`](docs/LABEL_TAXONOMY.md) — technical repository label families, qualified labels, and application rules
 - [`docs/GOVERNANCE_TAXONOMY.md`](docs/GOVERNANCE_TAXONOMY.md) — role-routing and L0–L7 access/governance labels
-- [`GOVERNANCE.md`](GOVERNANCE.md) — administration levels, functional roles, approval matrix, task assignment, merge authority, and escalation
+- [`GOVERNANCE.md`](GOVERNANCE.md) — administration levels, functional roles, approval matrix, task assignment, merge authority, moderation, and escalation
 - [`docs/ROLE_ASSIGNMENTS.md`](docs/ROLE_ASSIGNMENTS.md) — authoritative user/team role registry and bootstrap assignments
+- [`CODE_OF_CONDUCT.md`](CODE_OF_CONDUCT.md) — professional collaboration and prohibited-content policy
 - [`.github/CODEOWNERS`](.github/CODEOWNERS) — machine-readable review ownership baseline
 - [`SECURITY.md`](SECURITY.md) — security and legacy-driver risk policy
 
 ## Governance summary
 
-openCUDA separates repository access from project authority. Pull-request review, task assignment, architecture/compatibility approval, documentation approval, security review, releases, hardware validation, and repository administration are delegated as explicit functional roles. Administration levels run from **L0 Observer** through **L7 Project Owner**, with least privilege as the default. See `GOVERNANCE.md` for the binding policy.
+openCUDA separates repository access from project authority. Pull-request review, task assignment, architecture/compatibility approval, documentation approval, community moderation, security review, releases, hardware validation, and repository administration are delegated as explicit functional roles. Administration levels run from **L0 Observer** through **L7 Project Owner**, with least privilege as the default. See `GOVERNANCE.md` for the binding policy.
+
+CI also treats GitHub configuration and collaboration safety as testable project behavior: source check-ins are checked for repository/ABI/security compliance, workflow/forms/routing files are validated, and user-generated collaboration text is screened and routed to a human moderator without automatic deletion.
 
 ## Upstream references
 

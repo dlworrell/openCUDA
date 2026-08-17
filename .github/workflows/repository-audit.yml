@@ -1,0 +1,122 @@
+name: repository-audit
+
+on:
+  workflow_dispatch:
+    inputs:
+      strict:
+        description: Fail when live repository settings drift from policy
+        required: true
+        default: true
+        type: boolean
+  schedule:
+    - cron: '17 6 * * 1'
+
+permissions:
+  contents: read
+  discussions: read
+  issues: read
+
+jobs:
+  audit:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    env:
+      STRICT: ${{ inputs.strict }}
+    steps:
+      - uses: actions/checkout@v4
+      - name: Audit live GitHub state
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const fs = require('fs');
+            const strict = process.env.STRICT === 'true';
+            const failures = [];
+            const notes = [];
+            const owner = context.repo.owner;
+            const repo = context.repo.repo;
+
+            const repoState = (await github.rest.repos.get({ owner, repo })).data;
+            if (!repoState.has_issues) failures.push('Issues are disabled.');
+            if (!repoState.has_discussions) failures.push('Discussions are disabled.');
+
+            const main = (await github.rest.repos.getBranch({ owner, repo, branch: repoState.default_branch })).data;
+            if (!main.protected) failures.push(`Default branch ${repoState.default_branch} is not protected.`);
+
+            const labels = new Set((await github.paginate(github.rest.issues.listLabelsForRepo, {
+              owner, repo, per_page: 100,
+            })).map(item => item.name));
+            const routing = JSON.parse(fs.readFileSync('config/issue-routing.json', 'utf8'));
+            const requiredLabels = new Set(routing.rules.flatMap(rule => rule.labels));
+            for (const label of [
+              'operational', 'architectural', 'compatibility', 'developmental', 'discussion',
+              'reference', 'roadmap', 'role', 'role:community-moderator', 'access',
+            ]) {
+              requiredLabels.add(label);
+            }
+            for (const label of requiredLabels) {
+              if (!labels.has(label)) failures.push(`Missing repository label: ${label}`);
+            }
+
+            if (repoState.has_discussions) {
+              const contract = JSON.parse(fs.readFileSync('config/discussion-categories.json', 'utf8'));
+              const query = `query($owner:String!, $repo:String!) {
+                repository(owner:$owner, name:$repo) {
+                  discussionCategories(first:50) { nodes { name slug isAnswerable } }
+                }
+              }`;
+              const result = await github.graphql(query, { owner, repo });
+              const actual = new Map(result.repository.discussionCategories.nodes.map(item => [item.slug, item]));
+              for (const expected of contract.categories) {
+                const category = actual.get(expected.slug);
+                if (!category) {
+                  failures.push(`Missing Discussion category: ${expected.slug}`);
+                  continue;
+                }
+                if (category.name !== expected.name) failures.push(`Discussion ${expected.slug} name mismatch.`);
+                if (expected.format === 'question-and-answer' && !category.isAnswerable) {
+                  failures.push(`Discussion ${expected.slug} must be Q&A/answerable.`);
+                }
+                if (expected.format !== 'question-and-answer' && category.isAnswerable) {
+                  failures.push(`Discussion ${expected.slug} unexpectedly uses Q&A format.`);
+                }
+              }
+              notes.push(`Discussion categories checked: ${contract.categories.length}`);
+            }
+
+            const requiredFiles = [
+              '.github/CODEOWNERS',
+              '.github/PULL_REQUEST_TEMPLATE.md',
+              '.github/workflows/ci.yml',
+              '.github/workflows/compliance.yml',
+              '.github/workflows/content-moderation.yml',
+              '.github/workflows/issue-routing.yml',
+              '.github/workflows/repository-audit.yml',
+              'GOVERNANCE.md',
+              'CODE_OF_CONDUCT.md',
+              'docs/CI_TEST_SUITE.md',
+              'docs/CONTENT_MODERATION.md',
+              'docs/ISSUES_AND_DISCUSSIONS.md',
+            ];
+            for (const path of requiredFiles) {
+              try {
+                await github.rest.repos.getContent({ owner, repo, path, ref: repoState.default_branch });
+              } catch (error) {
+                failures.push(`Missing required file on ${repoState.default_branch}: ${path}`);
+              }
+            }
+
+            await core.summary
+              .addHeading('openCUDA repository audit')
+              .addTable([
+                [{data: 'Check', header: true}, {data: 'Result', header: true}],
+                ['Issues enabled', repoState.has_issues ? 'PASS' : 'FAIL'],
+                ['Discussions enabled', repoState.has_discussions ? 'PASS' : 'FAIL'],
+                ['Default branch protected', main.protected ? 'PASS' : 'FAIL'],
+                ['Required labels', failures.some(item => item.startsWith('Missing repository label')) ? 'FAIL' : 'PASS'],
+              ])
+              .addRaw(`\nFailures: ${failures.length}\n`)
+              .write();
+
+            for (const note of notes) core.info(note);
+            for (const failure of failures) core.warning(failure);
+            if (failures.length && strict) core.setFailed(`${failures.length} repository configuration check(s) failed.`);

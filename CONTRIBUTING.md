@@ -10,6 +10,28 @@ openCUDA is pre-alpha compatibility research. Changes should prioritize correctn
 - Do not commit proprietary NVIDIA libraries, drivers, SDK archives, firmware, or other redistributability-restricted artifacts.
 - Do not introduce raw CUDA runtime pointers into the public ABI.
 - Prefer deterministic CPU reference implementations for numerical correctness tests.
+- Treat GitHub forms, workflows, moderation policy, routing tables, and governance files as tested engineering artifacts rather than informal configuration.
+
+## Collaboration conduct and content
+
+All repository collaboration is governed by [`CODE_OF_CONDUCT.md`](CODE_OF_CONDUCT.md) and the operational process in [`docs/CONTENT_MODERATION.md`](docs/CONTENT_MODERATION.md).
+
+- Use professional language in Issues, Pull Requests, reviews, Discussions, comments, code comments, and documentation.
+- Do not post pornographic/sexually explicit material, abusive language, harassment, threats, malicious links, credentials, or restricted/private material.
+- Do not reproduce prohibited content inside a moderation report; link to the source and use the policy category/rule ID.
+- Embedded media may be routed for manual moderation review because local CI does not inspect image/video pixels.
+- Good-faith false positives are reviewable; do not attempt to evade or obfuscate the moderation filters.
+
+## Issues and Discussions
+
+Use [`docs/ISSUES_AND_DISCUSSIONS.md`](docs/ISSUES_AND_DISCUSSIONS.md) to choose the correct intake path.
+
+- Start exploratory architecture, compatibility, research, proposal, roadmap, benchmark-analysis, hardware, help, question, and governance work in the matching Discussion category.
+- Open an Issue when a defect is reproducible or work is scoped enough to have acceptance criteria and an assignee.
+- Prefer GitHub's **Create issue from discussion** path when a Discussion becomes implementation-ready so its body and labels are retained.
+- The issue chooser disables blank issues for normal contributors and provides specialized engineering forms plus links back to Discussions.
+- Use the Moderation Report form for conduct/content concerns without copying the reported content.
+- Creating or assigning an issue does not approve the work; the review and approval requirements below still apply.
 
 ## Labels
 
@@ -35,11 +57,13 @@ Project authority is defined by [`GOVERNANCE.md`](GOVERNANCE.md) and active assi
 - Compatibility-policy or support-boundary changes require Compatibility Approver participation.
 - Proposed technical documentation requires Documentation Approver review; architecture, compatibility, security, roadmap, and governance documents also require their domain-specific approver.
 - Security-sensitive changes require Security Reviewer participation.
+- Community-content/moderation-policy changes require Community Moderator participation.
+- CI/workflow policy changes require CI/Build Maintainer review and Security Reviewer participation when token permissions or trust boundaries change.
 - Reference-platform measurements/claims require Hardware Validation review where applicable.
 - Governance/access/role changes require Project Owner authority.
 - Follow `.github/CODEOWNERS` review routing in addition to the governance approval matrix.
 
-Task assignment is controlled by the governance level/role model: L2+ Task Managers may assign ordinary work; L4+ Maintainers may override ordinary assignment for project sequencing; security and governance/access work require the higher authorities defined in `GOVERNANCE.md`.
+Task assignment is controlled by the governance level/role model: L2+ Task Managers may assign ordinary work; L2+ Community Moderators may own moderation-review work; L4+ Maintainers may override ordinary assignment for project sequencing; security and governance/access work require the higher authorities defined in `GOVERNANCE.md`.
 
 ## Languages
 
@@ -51,11 +75,20 @@ Task assignment is controlled by the governance level/role model: L2+ Task Manag
 
 ## Before submitting
 
+Install the development dependencies, then run the repository contract and portable tests described in [`docs/CI_TEST_SUITE.md`](docs/CI_TEST_SUITE.md):
+
 ```bash
-cmake --preset dev
-cmake --build --preset dev
-ctest --preset dev
+python -m pip install -e '.[dev]'
+python scripts/ci/repository_policy.py --root .
+python scripts/ci/validate_github_config.py --root .
+python scripts/ci/validate_workflows.py --root .
+python scripts/ci/content_policy.py --scan-repository . --fail-on warn
 python -m pytest
 python -m ruff check python scripts
 python -m mypy python/opencuda
+cmake --preset dev
+cmake --build --preset dev
+ctest --preset dev
 ```
+
+Low-level runtime changes should also be exercised with Clang static analysis and sanitizer jobs when available. Legacy CUDA/K80 behavior must be validated on the self-hosted Kepler workflow rather than inferred from portable CI.

@@ -1,0 +1,52 @@
+name: Moderation report
+description: Report collaboration content that may violate the openCUDA Code of Conduct without reproducing it.
+title: "[MODERATION] "
+labels:
+  - operational
+  - discussion
+  - role
+  - role:community-moderator
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Use this form for conduct/content concerns in Issues, Pull Requests, reviews, or Discussions. Do not quote, paste, screenshot, or re-upload prohibited content. Link to the source and describe the policy category only.
+  - type: input
+    id: source
+    attributes:
+      label: Source URL
+      description: Link directly to the Discussion, comment, Issue, PR, or review comment.
+      placeholder: https://github.com/...
+    validations:
+      required: true
+  - type: dropdown
+    id: category
+    attributes:
+      label: Concern category
+      options:
+        - Profanity / abusive language
+        - Explicit adult / X-rated content
+        - Harassment / threat / intimidation
+        - Hateful or discriminatory content
+        - Spam / malicious link / credential harvesting
+        - Private or restricted information
+        - Embedded media requiring review
+        - Other Code of Conduct concern
+    validations:
+      required: true
+  - type: textarea
+    id: context
+    attributes:
+      label: Context without reproducing the content
+      description: Explain why review is needed. Refer to rule/category names rather than copying prohibited text.
+    validations:
+      required: true
+  - type: checkboxes
+    id: safety
+    attributes:
+      label: Safety confirmation
+      options:
+        - label: I have not reproduced the reported prohibited content in this Issue.
+          required: true
+        - label: I understand urgent credential/security exposure should also follow SECURITY.md.
+          required: true

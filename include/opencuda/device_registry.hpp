@@ -18,10 +18,10 @@ struct DeviceInfo {
 };
 
 class DeviceRegistry {
-public:
+  public:
     [[nodiscard]] static std::vector<DeviceInfo> detect();
 };
 
-}  // namespace opencuda
+} // namespace opencuda
 
 #endif

@@ -1,0 +1,39 @@
+{
+  "version": 1,
+  "max_file_bytes": 2097152,
+  "forbidden_binary_extensions": [
+    ".a", ".bin", ".cubin", ".dll", ".dmg", ".exe", ".fatbin", ".gz",
+    ".iso", ".lib", ".msi", ".o", ".obj", ".pkg", ".ptx", ".so", ".tar", ".tgz", ".zip", ".7z"
+  ],
+  "forbidden_generated_directories": ["build", "dist", "__pycache__", ".pytest_cache", ".mypy_cache", ".ruff_cache"],
+  "unsafe_c_apis": [
+    "gets", "strcpy", "strcat", "sprintf", "vsprintf"
+  ],
+  "discouraged_c_apis": [
+    "strncpy", "strncat"
+  ],
+  "public_abi_forbidden_types": [
+    "cudaStream_t", "cudaEvent_t", "cudaGraph_t", "cudaGraphExec_t",
+    "CUcontext", "CUdeviceptr", "CUstream", "CUevent", "CUmodule", "CUfunction"
+  ],
+  "secret_patterns": [
+    {"id": "private-key", "pattern": "-----BEGIN (?:RSA |EC |OPENSSH |DSA )?PRIVATE KEY-----"},
+    {"id": "github-token", "pattern": "\\b(?:ghp|gho|ghu|ghs|ghr)_[A-Za-z0-9]{30,}\\b"},
+    {"id": "github-fine-grained-token", "pattern": "\\bgithub_pat_[A-Za-z0-9_]{40,}\\b"},
+    {"id": "aws-access-key", "pattern": "\\bAKIA[0-9A-Z]{16}\\b"}
+  ],
+  "text_extensions": [
+    ".c", ".h", ".cpp", ".hpp", ".cc", ".cxx", ".cu", ".cuh", ".S", ".asm",
+    ".py", ".sh", ".cmake", ".yml", ".yaml", ".md", ".toml", ".json", ".txt"
+  ],
+  "scan_directories": ["include", "src", "tests", "python", "scripts", "docs", ".github", "config"],
+  "exclude_paths": [
+    "config/repository-policy.json",
+    "config/content-policy.json",
+    "python/opencuda_compat.egg-info/",
+    ".git/",
+    ".venv/",
+    "build/",
+    "build-"
+  ]
+}

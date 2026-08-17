@@ -1,0 +1,44 @@
+title: '[Compatibility Research] '
+labels:
+- discussion
+- discussion:research
+- compatibility
+body:
+- type: markdown
+  attributes:
+    value: Use for evidence-driven investigation of native support, lowering, substitution, CPU fallback, unsupported behavior, legacy libraries, or future retired GPU generations.
+- type: textarea
+  id: capability
+  attributes:
+    label: Capability under study
+    description: Identify the operation, library, toolchain, driver, framework, or GPU capability.
+  validations:
+    required: true
+- type: dropdown
+  id: hypothesis
+  attributes:
+    label: Current compatibility hypothesis
+    description: Choose the current working classification.
+    options:
+    - Native on legacy backend
+    - Lowerable to supported primitives
+    - Substitutable with legacy/project implementation
+    - CPU fallback may preserve correctness
+    - Likely unsupported
+    - Unknown / research required
+  validations:
+    required: true
+- type: textarea
+  id: evidence
+  attributes:
+    label: Evidence
+    description: Provide documentation, source references, experiments, or reproducible observations.
+  validations:
+    required: true
+- type: textarea
+  id: next
+  attributes:
+    label: Next experiment / decision
+    description: State what evidence would resolve the question.
+  validations:
+    required: true

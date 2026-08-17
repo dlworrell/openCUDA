@@ -1,0 +1,51 @@
+{
+  "version": 1,
+  "policy_name": "openCUDA community content policy",
+  "severity_order": ["review", "warn", "block"],
+  "categories": [
+    {
+      "id": "profanity",
+      "severity": "block",
+      "description": "Foul or abusive language is not permitted in project collaboration surfaces.",
+      "terms": [
+        "fuck", "fucking", "fucked", "fucker", "motherfucker",
+        "shit", "shitty", "asshole", "bitch", "bastard", "cocksucker"
+      ]
+    },
+    {
+      "id": "explicit-adult-content",
+      "severity": "block",
+      "description": "Pornographic or explicitly sexual text is not permitted.",
+      "terms": [
+        "porn", "pornography", "xxx", "blowjob", "handjob", "cumshot",
+        "gangbang", "onlyfans", "sexcam", "nudes", "nude pics", "explicit sex"
+      ]
+    }
+  ],
+  "regex_rules": [
+    {
+      "id": "adult-link",
+      "category": "explicit-adult-content",
+      "severity": "block",
+      "pattern": "https?://[^\\s)\\]>]*(?:porn|xxx|sexcam|adult[-_.]?video|onlyfans)[^\\s)\\]>]*"
+    }
+  ],
+  "media_review": {
+    "enabled": true,
+    "severity": "review",
+    "id": "embedded-media-review",
+    "description": "Images/video cannot be content-classified by the local text scanner and require moderator review."
+  },
+  "repository_scan": {
+    "extensions": [".c", ".h", ".cpp", ".hpp", ".cc", ".cxx", ".cu", ".cuh", ".S", ".asm", ".py", ".sh", ".cmake", ".yml", ".yaml", ".md", ".toml", ".json", ".txt"],
+    "exclude": [
+      "config/content-policy.json",
+      "scripts/ci/content_policy.py",
+      "python/tests/test_content_policy.py",
+      ".git/",
+      ".venv/",
+      "build/",
+      "build-"
+    ]
+  }
+}

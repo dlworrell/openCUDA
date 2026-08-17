@@ -1,0 +1,48 @@
+name: Performance / benchmark work
+description: Track a benchmark, performance regression, bottleneck, or optimization task.
+title: '[Performance] '
+labels:
+- operational
+- operational:benchmarking
+- operational:performance
+- role
+- role:hardware-validator
+body:
+- type: markdown
+  attributes:
+    value: Benchmark claims must include reproducible methodology. Discussion is preferred while interpreting incomplete or exploratory results.
+- type: input
+  id: platform
+  attributes:
+    label: Platform / stack
+    description: Hardware, OS, driver/toolkit, build, and relevant configuration.
+  validations:
+    required: true
+- type: textarea
+  id: workload
+  attributes:
+    label: Workload
+    description: Algorithm, dataset/problem size, precision, iteration count, and transfer pattern.
+  validations:
+    required: true
+- type: textarea
+  id: baseline
+  attributes:
+    label: Baseline
+    description: Existing throughput/latency/bandwidth result and how it was measured.
+  validations:
+    required: true
+- type: textarea
+  id: target
+  attributes:
+    label: Target / hypothesis
+    description: What improvement, regression bound, or bottleneck is being evaluated?
+  validations:
+    required: true
+- type: textarea
+  id: acceptance
+  attributes:
+    label: Acceptance criteria
+    description: Required measurements, statistical treatment, and regression thresholds.
+  validations:
+    required: true

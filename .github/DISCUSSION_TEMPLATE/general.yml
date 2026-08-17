@@ -1,0 +1,21 @@
+title: '[General] '
+labels:
+- discussion
+body:
+- type: markdown
+  attributes:
+    value: General project conversation. Use a more specific category when the topic is an RFC, compatibility research, hardware, benchmarking, help, governance, or a proposal.
+- type: textarea
+  id: topic
+  attributes:
+    label: Topic
+    description: Describe the topic and the outcome you want from the conversation.
+  validations:
+    required: true
+- type: textarea
+  id: context
+  attributes:
+    label: Context
+    description: Include relevant links, prior issues/PRs, measurements, or constraints.
+  validations:
+    required: false

@@ -8,4 +8,4 @@ std::vector<DeviceInfo> DeviceRegistry::detect() {
     return {};
 }
 
-}  // namespace opencuda
+} // namespace opencuda

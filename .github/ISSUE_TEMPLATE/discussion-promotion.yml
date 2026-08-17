@@ -1,0 +1,65 @@
+name: Promote a discussion to implementation
+description: Create a scoped work item from an approved/mature Discussion.
+title: '[From Discussion] '
+labels:
+- enhancement
+- roadmap
+- role
+- role:task-manager
+body:
+- type: markdown
+  attributes:
+    value: GitHub also supports Create issue from discussion, which copies the discussion body and retains labels. Use this form when additional scoping is needed before assignment.
+- type: input
+  id: discussion
+  attributes:
+    label: Source discussion URL
+    description: Required provenance link to the Discussion being promoted.
+  validations:
+    required: true
+- type: textarea
+  id: decision
+  attributes:
+    label: Decision / consensus
+    description: Summarize the accepted outcome and unresolved constraints.
+  validations:
+    required: true
+- type: dropdown
+  id: phase
+  attributes:
+    label: Roadmap phase
+    description: Select the implementation phase.
+    options:
+    - Phase 0 — Bootstrap
+    - Phase 1 — Hardware discovery
+    - Phase 2 — Legacy execution service
+    - Phase 3 — Scheduler
+    - Phase 4 — Numerical libraries
+    - Phase 5 — Compiler/lowering
+    - Phase 6 — Python/scientific front ends
+    - Phase 7 — PyTorch kepler backend
+    - Phase 8 — General legacy CUDA framework
+    - Cross-phase / unassigned
+  validations:
+    required: true
+- type: textarea
+  id: tasks
+  attributes:
+    label: Implementation tasks
+    description: Break the decision into concrete engineering tasks.
+  validations:
+    required: true
+- type: textarea
+  id: acceptance
+  attributes:
+    label: Acceptance criteria
+    description: Define objective completion tests/evidence.
+  validations:
+    required: true
+- type: textarea
+  id: approvals
+  attributes:
+    label: Required domain approvals
+    description: Architecture, Compatibility, Documentation, Security, Hardware Validation, Release, or Project Owner as applicable.
+  validations:
+    required: false

@@ -1,0 +1,23 @@
+name: kepler-hardware-ci
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  kepler:
+    # Register the DL380p runner with all four labels before enabling this workflow.
+    runs-on: [self-hosted, linux, x64, kepler]
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+      - name: Host diagnostics
+        run: ./scripts/diagnose_kepler_host.sh
+      - name: Configure CUDA 11.x backend
+        run: cmake --preset kepler-cuda11
+      - name: Build
+        run: cmake --build --preset kepler-cuda11 --parallel
+      - name: Native tests
+        run: ctest --preset kepler-cuda11

@@ -1,0 +1,28 @@
+name: Feature proposal
+description: Propose a compatibility, backend, tooling, or API enhancement
+title: "enhancement: "
+labels: ["enhancement"]
+body:
+  - type: textarea
+    id: problem
+    attributes:
+      label: Problem
+      description: What compatibility or development problem should this solve?
+    validations:
+      required: true
+  - type: textarea
+    id: proposal
+    attributes:
+      label: Proposed approach
+    validations:
+      required: true
+  - type: dropdown
+    id: behavior
+    attributes:
+      label: Expected compatibility class
+      options:
+        - Native
+        - Lowerable
+        - CPU fallback
+        - Tooling only
+        - Not sure

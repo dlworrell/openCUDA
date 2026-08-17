@@ -10,7 +10,7 @@ from dataclasses import asdict
 from pathlib import Path
 from typing import Any
 
-from content_policy import content_hash, load_policy, scan_text, severity_at_least
+from .content_policy import content_hash, load_policy, scan_text, severity_at_least
 
 
 def _user_login(value: Any) -> str:

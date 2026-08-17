@@ -1,0 +1,32 @@
+# openCUDA CODEOWNERS
+#
+# Bootstrap state: the repository owner is the fallback owner for all paths.
+# Replace individual ownership with organization teams as roles are delegated.
+# Governance semantics and approval requirements are defined in GOVERNANCE.md.
+
+* @dlworrell
+
+# Governance and repository-control surfaces
+/.github/ @dlworrell
+/GOVERNANCE.md @dlworrell
+/docs/ROLE_ASSIGNMENTS.md @dlworrell
+/docs/LABEL_TAXONOMY.md @dlworrell
+/SECURITY.md @dlworrell
+
+# Architecture and compatibility policy
+/docs/ARCHITECTURE.md @dlworrell
+/docs/COMPATIBILITY.md @dlworrell
+/docs/ROADMAP.md @dlworrell
+/include/opencuda/ @dlworrell
+/src/core/ @dlworrell
+/src/cpp/ @dlworrell
+/src/legacy_cuda/ @dlworrell
+
+# Build, CI, packaging, and low-level implementation
+/CMakeLists.txt @dlworrell
+/CMakePresets.json @dlworrell
+/pyproject.toml @dlworrell
+/src/asm/ @dlworrell
+/scripts/ @dlworrell
+/python/ @dlworrell
+/tests/ @dlworrell

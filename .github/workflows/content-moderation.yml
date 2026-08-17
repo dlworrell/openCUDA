@@ -99,7 +99,7 @@ jobs:
                 repo: context.repo.repo,
                 title: `Moderation review: ${result.source_key}`,
                 body: reviewBody,
-                labels: ['operational', 'discussion', 'role', 'role:repository-admin', 'access', 'access:l6-repository-admin'],
+                labels: ['operational', 'discussion', 'role', 'role:community-moderator'],
               });
               reviewIssue = created.data;
             } else {

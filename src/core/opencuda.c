@@ -7,21 +7,19 @@ opencuda_version opencuda_get_version(void) {
 
 const char *opencuda_status_string(opencuda_status status) {
     switch (status) {
-        case OPENCUDA_STATUS_OK:
-            return "ok";
-        case OPENCUDA_STATUS_UNAVAILABLE:
-            return "unavailable";
-        case OPENCUDA_STATUS_UNSUPPORTED:
-            return "unsupported";
-        case OPENCUDA_STATUS_INVALID_ARGUMENT:
-            return "invalid argument";
-        case OPENCUDA_STATUS_INTERNAL_ERROR:
-            return "internal error";
-        default:
-            return "unknown status";
+    case OPENCUDA_STATUS_OK:
+        return "ok";
+    case OPENCUDA_STATUS_UNAVAILABLE:
+        return "unavailable";
+    case OPENCUDA_STATUS_UNSUPPORTED:
+        return "unsupported";
+    case OPENCUDA_STATUS_INVALID_ARGUMENT:
+        return "invalid argument";
+    case OPENCUDA_STATUS_INTERNAL_ERROR:
+        return "internal error";
+    default:
+        return "unknown status";
     }
 }
 
-void opencuda_cpu_relax(void) {
-    opencuda_asm_cpu_relax();
-}
+void opencuda_cpu_relax(void) { opencuda_asm_cpu_relax(); }

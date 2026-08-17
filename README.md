@@ -84,13 +84,16 @@ python/opencuda/        Python package and future bindings
 scripts/                Diagnostics and developer tooling
 docs/                   Architecture, compatibility, governance, roadmap, discussion record
 tests/                  Native tests
-.github/workflows/       Cross-platform CI
+.github/workflows/       Cross-platform CI and repository routing automation
+.github/ISSUE_TEMPLATE/  Structured issue/work-item intake
+.github/DISCUSSION_TEMPLATE/ Structured Discussion category forms
 .github/CODEOWNERS       Review ownership/routing baseline
 ```
 
 ## Documentation
 
 - [`docs/DISCUSSION_NOTES.md`](docs/DISCUSSION_NOTES.md) — design discussion that motivated the project
+- [`docs/ISSUES_AND_DISCUSSIONS.md`](docs/ISSUES_AND_DISCUSSIONS.md) — Discussion categories/forms, issue intake, promotion, moderation, and routing lifecycle
 - [`docs/ARCHITECTURE.md`](docs/ARCHITECTURE.md) — component model and ABI boundaries
 - [`docs/COMPATIBILITY.md`](docs/COMPATIBILITY.md) — compatibility policy and hard architectural limits
 - [`docs/REFERENCE_PLATFORM.md`](docs/REFERENCE_PLATFORM.md) — DL380p/CUBIX/K80 reference node

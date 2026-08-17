@@ -30,6 +30,7 @@
   "exclude_paths": [
     "config/repository-policy.json",
     "config/content-policy.json",
+    "python/opencuda_compat.egg-info/",
     ".git/",
     ".venv/",
     "build/",

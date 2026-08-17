@@ -5,7 +5,7 @@ labels:
   - operational
   - discussion
   - role
-  - role:repository-admin
+  - role:community-moderator
 body:
   - type: markdown
     attributes:

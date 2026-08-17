@@ -11,6 +11,16 @@ openCUDA is pre-alpha compatibility research. Changes should prioritize correctn
 - Do not introduce raw CUDA runtime pointers into the public ABI.
 - Prefer deterministic CPU reference implementations for numerical correctness tests.
 
+## Issues and Discussions
+
+Use [`docs/ISSUES_AND_DISCUSSIONS.md`](docs/ISSUES_AND_DISCUSSIONS.md) to choose the correct intake path.
+
+- Start exploratory architecture, compatibility, research, proposal, roadmap, benchmark-analysis, hardware, help, question, and governance work in the matching Discussion category.
+- Open an Issue when a defect is reproducible or work is scoped enough to have acceptance criteria and an assignee.
+- Prefer GitHub's **Create issue from discussion** path when a Discussion becomes implementation-ready so its body and labels are retained.
+- The issue chooser disables blank issues for normal contributors and provides specialized engineering forms plus links back to Discussions.
+- Creating or assigning an issue does not approve the work; the review and approval requirements below still apply.
+
 ## Labels
 
 Issues and pull requests use the repository taxonomy in [`docs/LABEL_TAXONOMY.md`](docs/LABEL_TAXONOMY.md) and the governance routing taxonomy in [`docs/GOVERNANCE_TAXONOMY.md`](docs/GOVERNANCE_TAXONOMY.md).

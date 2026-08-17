@@ -25,6 +25,7 @@ Check all that apply.
 - [ ] Compatibility policy
 - [ ] Documentation
 - [ ] Security
+- [ ] Community moderation / Code of Conduct
 - [ ] Release/governance
 - [ ] Reference hardware/benchmarks
 
@@ -37,6 +38,8 @@ Consult `GOVERNANCE.md` and `.github/CODEOWNERS`.
 - [ ] Compatibility Approver requested where support/lowering/fallback behavior changed
 - [ ] Documentation Approver requested for proposed documentation
 - [ ] Security Reviewer requested for security-sensitive changes
+- [ ] Community Moderator requested for conduct/moderation-policy changes
+- [ ] CI/Build Maintainer requested for CI policy/workflow changes
 - [ ] Hardware Validation Maintainer requested for reference-platform claims/measurements
 - [ ] Release Manager requested for release/version changes
 - [ ] Project Owner requested for governance/access/role changes
@@ -44,6 +47,10 @@ Consult `GOVERNANCE.md` and `.github/CODEOWNERS`.
 
 ## Validation
 
+- [ ] `python scripts/ci/repository_policy.py --root .`
+- [ ] `python scripts/ci/validate_github_config.py --root .`
+- [ ] `python scripts/ci/validate_workflows.py --root .`
+- [ ] `python scripts/ci/content_policy.py --scan-repository . --fail-on warn`
 - [ ] `cmake --preset dev`
 - [ ] `cmake --build --preset dev`
 - [ ] `ctest --preset dev`
@@ -58,10 +65,12 @@ Consult `GOVERNANCE.md` and `.github/CODEOWNERS`.
 - [ ] New behavior is classified as native/lowerable/substitution/fallback/unsupported where applicable
 - [ ] No unsupported hardware capability is presented as native
 - [ ] New reference-platform claims include reproducible evidence or source attribution
+- [ ] New/changed workflow permissions are justified and least-privilege
+- [ ] User-controlled Issue/Discussion/PR text is not interpolated directly into shell commands
 
 ## Risk / rollback
 
-Describe security, compatibility, ABI, performance, or operational risk and how the change can be reverted.
+Describe security, compatibility, ABI, performance, moderation, or operational risk and how the change can be reverted.
 
 ## Approval exceptions
 

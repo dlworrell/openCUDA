@@ -35,6 +35,7 @@ Assign the lowest GitHub permission and lowest administration level that allow t
 | **Repository Administrator** | L6 | Repository settings, access control, rulesets, secrets, destructive/recovery operations. |
 | **Maintainer / Merge Steward** | L4 | Merge PRs after required approvals/checks, maintain branches, coordinate normal repository operation. |
 | **Task Manager / Triage Coordinator** | L2 | Classify, prioritize, assign, reassign, and close ordinary work items according to roadmap/taxonomy. |
+| **Community Moderator** | L2 | Review Code-of-Conduct/content findings, moderate Discussions and collaboration surfaces, dispose moderation tasks, and escalate safety/security concerns without requiring merge authority. |
 | **Code Reviewer** | L3 | Approve/request changes on implementation PRs within assigned language/component scope. |
 | **Architecture Approver** | L5 | Approve changes to ABI boundaries, component structure, scheduler/topology/memory/transport models, and `ARCHITECTURE.md`. |
 | **Compatibility Approver** | L5 | Approve support-policy, lowering/fallback/unsupported behavior, CUDA-generation boundaries, and `COMPATIBILITY.md`. |
@@ -67,6 +68,7 @@ Authors may not supply the sole binding approval for their own PR.
 | Architecture or `docs/ARCHITECTURE.md` | 1 Architecture Approver; 2 total approvals when implementation changes accompany it. |
 | Compatibility policy or `docs/COMPATIBILITY.md` | 1 Compatibility Approver; 2 total approvals when runtime behavior changes. |
 | Security-sensitive code, workflows, secrets policy, or `SECURITY.md` | 1 Security Reviewer plus 1 Maintainer/Administrator approval. |
+| Community moderation policy, `CODE_OF_CONDUCT.md`, `docs/CONTENT_MODERATION.md`, or moderation vocabulary | 1 Community Moderator plus 1 Documentation Approver; add Security Reviewer and CI/Build Maintainer when workflow permissions/security behavior changes. |
 | Governance, CODEOWNERS, role assignments, access policy | Project Owner approval; changes affecting owner/admin authority require explicit L7 approval. |
 | Release/versioning/public artifacts | 1 Release Manager plus 1 Maintainer; all required CI/hardware gates for the release target must pass. |
 | Reference-hardware claims/baselines | 1 Hardware Validation Maintainer; benchmark methodology changes also require an appropriate Code/Architecture Reviewer. |
@@ -82,6 +84,7 @@ Documentation is treated as an engineering artifact, not an informal side channe
 - `ARCHITECTURE.md` requires Architecture Approver review.
 - `COMPATIBILITY.md` requires Compatibility Approver review.
 - `SECURITY.md` requires Security Reviewer review.
+- `CODE_OF_CONDUCT.md` and `docs/CONTENT_MODERATION.md` require Community Moderator and Documentation Approver review.
 - `ROADMAP.md` requires Maintainer approval and Project Owner approval for phase addition/removal or material scope changes.
 - `GOVERNANCE.md`, `ROLE_ASSIGNMENTS.md`, `.github/CODEOWNERS`, and the governance taxonomy require Project Owner approval.
 - Documentation that asserts measured hardware behavior must link or attach reproducible evidence and receive Hardware Validation review where applicable.
@@ -89,11 +92,24 @@ Documentation is treated as an engineering artifact, not an informal side channe
 ## Task assignment
 
 - L2+ Task Managers may assign and reassign normal issues and roadmap work.
+- L2+ Community Moderators may own moderation-review work and request edits or escalate a content incident according to `CODE_OF_CONDUCT.md`.
 - L4+ Maintainers may override normal assignment to resolve blocking dependencies, abandoned work, or release-critical sequencing.
 - Security-sensitive issues are assigned only by a Security Reviewer, Repository Administrator, or Project Owner.
 - Governance/access-control work is assigned only by L6/L7 authority.
 - Contributors may volunteer for work, but assignment is not final until accepted by an authorized Task Manager/Maintainer for critical or cross-cutting items.
 - Assignment does not confer approval authority over the resulting PR.
+
+## Community moderation
+
+`CODE_OF_CONDUCT.md` defines collaboration standards and `docs/CONTENT_MODERATION.md` defines the operational review process. Automated moderation is a triage mechanism rather than autonomous final authority.
+
+- Blocking text findings create an auditable moderation-review task and a neutral request to edit the source content.
+- Embedded media is routed for human review because local text CI cannot classify image/video pixels or audio.
+- The automation should not copy offending text into tracking Issues or logs when a rule ID and content hash are sufficient.
+- Automated deletion is not the default because false positives must remain recoverable and reviewable.
+- A Community Moderator may resolve good-faith false positives, request edits, hide/delete content where GitHub permissions permit, lock conversations, or escalate repeated/serious violations.
+- Credential exposure, malicious links, threats, or other security-sensitive content must also involve a Security Reviewer or Repository Administrator.
+- Unresolved moderation disputes escalate to a Maintainer, Repository Administrator, and ultimately Project Owner.
 
 ## CODEOWNERS and repository rules
 
@@ -124,7 +140,7 @@ Only L6/L7 authority may change repository visibility, transfer/delete the repos
 
 ## Conflict and escalation
 
-Technical disagreements should first be resolved by the responsible domain approver. Cross-domain conflicts escalate to a Maintainer, then Repository Administrator for operational conflicts, and ultimately Project Owner for governance/project-direction decisions.
+Technical disagreements should first be resolved by the responsible domain approver. Moderation disputes start with the Community Moderator. Cross-domain conflicts escalate to a Maintainer, then Repository Administrator for operational conflicts, and ultimately Project Owner for governance/project-direction decisions.
 
 ## Governance changes
 

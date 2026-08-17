@@ -1,0 +1,57 @@
+{
+  "version": 6,
+  "cmakeMinimumRequired": {
+    "major": 3,
+    "minor": 24,
+    "patch": 0
+  },
+  "configurePresets": [
+    {
+      "name": "base",
+      "hidden": true,
+      "generator": "Ninja",
+      "binaryDir": "${sourceDir}/build/${presetName}",
+      "cacheVariables": {
+        "CMAKE_EXPORT_COMPILE_COMMANDS": "ON",
+        "OPENCUDA_BUILD_TESTS": "ON"
+      }
+    },
+    {
+      "name": "dev",
+      "inherits": "base",
+      "displayName": "Portable developer build",
+      "cacheVariables": {
+        "CMAKE_BUILD_TYPE": "Debug",
+        "OPENCUDA_ENABLE_LEGACY_CUDA": "OFF"
+      }
+    },
+    {
+      "name": "release",
+      "inherits": "base",
+      "displayName": "Portable release build",
+      "cacheVariables": {
+        "CMAKE_BUILD_TYPE": "Release",
+        "OPENCUDA_ENABLE_LEGACY_CUDA": "OFF"
+      }
+    },
+    {
+      "name": "kepler-cuda11",
+      "inherits": "base",
+      "displayName": "Kepler CUDA 11.x backend",
+      "cacheVariables": {
+        "CMAKE_BUILD_TYPE": "Release",
+        "OPENCUDA_ENABLE_LEGACY_CUDA": "ON"
+      }
+    }
+  ],
+  "buildPresets": [
+    {"name": "dev", "configurePreset": "dev"},
+    {"name": "release", "configurePreset": "release"},
+    {"name": "kepler-cuda11", "configurePreset": "kepler-cuda11"}
+  ],
+  "testPresets": [
+    {"name": "dev", "configurePreset": "dev", "output": {"outputOnFailure": true}},
+    {"name": "release", "configurePreset": "release", "output": {"outputOnFailure": true}},
+    {"name": "kepler-cuda11", "configurePreset": "kepler-cuda11", "output": {"outputOnFailure": true}}
+  ]
+}

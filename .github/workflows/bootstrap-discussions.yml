@@ -10,44 +10,59 @@ permissions:
 jobs:
   seed:
     runs-on: ubuntu-latest
+    timeout-minutes: 10
     steps:
+      - uses: actions/checkout@v4
       - name: Verify categories and create seed discussions
         uses: actions/github-script@v7
         with:
           script: |
+            const fs = require('fs');
             const owner = context.repo.owner;
             const name = context.repo.repo;
-            const expected = [
-              "general", "roadmap-planning", "rfc-architecture", "compatibility-research",
-              "ideas-proposals", "hardware-reference-platforms", "benchmarks-performance",
-              "development-help", "questions", "show-and-tell", "governance"
-            ];
-            const query = `query($owner:String!, $name:String!) { repository(owner:$owner, name:$name) { id discussionCategories(first:50) { nodes { id name slug } } discussions(first:100) { nodes { title } } } }`;
+            const contract = JSON.parse(fs.readFileSync('config/discussion-categories.json', 'utf8'));
+            const expected = contract.categories;
+            const query = `query($owner:String!, $name:String!) {
+              repository(owner:$owner, name:$name) {
+                id
+                discussionCategories(first:50) { nodes { id name slug isAnswerable } }
+                discussions(first:100) { nodes { title } }
+              }
+            }`;
             const data = await github.graphql(query, { owner, name });
             const repo = data.repository;
-            const bySlug = new Map(repo.discussionCategories.nodes.map(c => [c.slug, c]));
-            const missing = expected.filter(slug => !bySlug.has(slug));
+            const bySlug = new Map(repo.discussionCategories.nodes.map(category => [category.slug, category]));
+            const missing = expected.filter(category => !bySlug.has(category.slug));
             if (missing.length) {
-              core.setFailed(`Missing Discussion categories: ${missing.join(", ")}`);
+              core.setFailed(`Missing Discussion categories: ${missing.map(category => category.slug).join(', ')}`);
               return;
             }
-            const existing = new Set(repo.discussions.nodes.map(d => d.title));
-            const seeds = [
-              ["general", "Welcome to openCUDA Discussions", "Use specialized categories for design, compatibility, hardware, benchmarks, development help, proposals, questions, and governance. Promote implementation-ready work with Create issue from discussion."],
-              ["roadmap-planning", "Roadmap planning index", "Coordinate phase sequencing, dependencies, and cross-phase planning around docs/ROADMAP.md."],
-              ["rfc-architecture", "Architecture RFC index", "RFCs identify the problem, design, alternatives, compatibility impact, and decision criteria."],
-              ["compatibility-research", "Compatibility research index", "Research native execution, lowering, substitution, CPU fallback, unsupported behavior, toolchain boundaries, legacy libraries, and future retired GPUs."],
-              ["ideas-proposals", "Idea and proposal intake", "Use this category for concrete ideas that are not yet implementation-ready."],
-              ["hardware-reference-platforms", "Reference platform validation index", "Coordinate reference topology, NUMA, PCIe, P2P, ECC, bandwidth, and hardware evidence here."],
-              ["benchmarks-performance", "Benchmark methodology and baseline index", "Define reproducible benchmark methodology and interpret performance data here."],
-              ["development-help", "Development help and build Q&A", "Ask contributor questions about languages, CMake, testing, packaging, CI, and development environments."],
-              ["questions", "openCUDA project Q&A", "Ask general questions about project behavior, design intent, documentation, and usage."],
-              ["show-and-tell", "Experiments and prototypes showcase", "Share experiments, prototypes, integrations, workloads, visualizations, and results."],
-              ["governance", "Governance and role delegation index", "Discuss governance policy, role delegation, administration, moderation, process, ownership, and cross-domain decisions here."]
-            ];
-            const mutation = `mutation($repositoryId:ID!, $categoryId:ID!, $title:String!, $body:String!) { createDiscussion(input:{repositoryId:$repositoryId, categoryId:$categoryId, title:$title, body:$body}) { discussion { url } } }`;
-            for (const [slug, title, body] of seeds) {
-              if (existing.has(title)) continue;
-              const result = await github.graphql(mutation, { repositoryId: repo.id, categoryId: bySlug.get(slug).id, title, body });
+            for (const category of expected) {
+              const actual = bySlug.get(category.slug);
+              if (actual.name !== category.name) {
+                core.setFailed(`Discussion category ${category.slug} has name ${actual.name}, expected ${category.name}`);
+                return;
+              }
+              const shouldAnswer = category.format === 'question-and-answer';
+              if (actual.isAnswerable !== shouldAnswer) {
+                core.setFailed(`Discussion category ${category.slug} answerable=${actual.isAnswerable}, expected ${shouldAnswer}`);
+                return;
+              }
+            }
+
+            const existing = new Set(repo.discussions.nodes.map(discussion => discussion.title));
+            const mutation = `mutation($repositoryId:ID!, $categoryId:ID!, $title:String!, $body:String!) {
+              createDiscussion(input:{repositoryId:$repositoryId, categoryId:$categoryId, title:$title, body:$body}) {
+                discussion { url }
+              }
+            }`;
+            for (const category of expected) {
+              if (!category.seed || existing.has(category.seed.title)) continue;
+              const result = await github.graphql(mutation, {
+                repositoryId: repo.id,
+                categoryId: bySlug.get(category.slug).id,
+                title: category.seed.title,
+                body: category.seed.body,
+              });
               core.info(`Created: ${result.createDiscussion.discussion.url}`);
             }

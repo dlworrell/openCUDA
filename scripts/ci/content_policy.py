@@ -32,7 +32,18 @@ def load_policy(path: Path = DEFAULT_POLICY) -> dict[str, Any]:
 
 def normalize_text(text: str) -> str:
     text = unicodedata.normalize("NFKC", text).casefold()
-    table = str.maketrans({"0": "o", "1": "i", "3": "e", "4": "a", "5": "s", "7": "t", "@": "a", "$": "s"})
+    table = str.maketrans(
+        {
+            "0": "o",
+            "1": "i",
+            "3": "e",
+            "4": "a",
+            "5": "s",
+            "7": "t",
+            "@": "a",
+            "$": "s",
+        }
+    )
     return text.translate(table)
 
 
@@ -40,7 +51,12 @@ def _line_for(text: str, offset: int) -> int:
     return text.count("\n", 0, offset) + 1
 
 
-def scan_text(text: str, policy: dict[str, Any], source: str = "input", include_media: bool = True) -> list[Finding]:
+def scan_text(
+    text: str,
+    policy: dict[str, Any],
+    source: str = "input",
+    include_media: bool = True,
+) -> list[Finding]:
     normalized = normalize_text(text)
     findings: list[Finding] = []
 
@@ -49,16 +65,33 @@ def scan_text(text: str, policy: dict[str, Any], source: str = "input", include_
         severity = str(category["severity"])
         for term in category.get("terms", []):
             normalized_term = normalize_text(str(term))
-            pattern = re.compile(rf"(?<![\w]){re.escape(normalized_term)}(?![\w])", re.IGNORECASE)
+            pattern = re.compile(
+                rf"(?<![\w]){re.escape(normalized_term)}(?![\w])",
+                re.IGNORECASE,
+            )
             match = pattern.search(normalized)
             if match:
-                findings.append(Finding(f"{category_id}:term", category_id, severity, _line_for(normalized, match.start()), source))
+                findings.append(
+                    Finding(
+                        f"{category_id}:term",
+                        category_id,
+                        severity,
+                        _line_for(normalized, match.start()),
+                        source,
+                    )
+                )
 
     for rule in policy.get("regex_rules", []):
         match = re.search(str(rule["pattern"]), normalized, flags=re.IGNORECASE)
         if match:
             findings.append(
-                Finding(str(rule["id"]), str(rule["category"]), str(rule["severity"]), _line_for(normalized, match.start()), source)
+                Finding(
+                    str(rule["id"]),
+                    str(rule["category"]),
+                    str(rule["severity"]),
+                    _line_for(normalized, match.start()),
+                    source,
+                )
             )
 
     media = policy.get("media_review", {})
@@ -71,13 +104,26 @@ def scan_text(text: str, policy: dict[str, Any], source: str = "input", include_
             match = pattern.search(text)
             if match:
                 findings.append(
-                    Finding(str(media["id"]), "media", str(media["severity"]), _line_for(text, match.start()), source)
+                    Finding(
+                        str(media["id"]),
+                        "media",
+                        str(media["severity"]),
+                        _line_for(text, match.start()),
+                        source,
+                    )
                 )
                 break
 
     unique: dict[tuple[str, str, str, int, str], Finding] = {}
     for finding in findings:
-        unique[(finding.rule_id, finding.category, finding.severity, finding.line, finding.source)] = finding
+        key = (
+            finding.rule_id,
+            finding.category,
+            finding.severity,
+            finding.line,
+            finding.source,
+        )
+        unique[key] = finding
     return list(unique.values())
 
 
@@ -87,24 +133,32 @@ def content_hash(text: str) -> str:
 
 def _excluded(path: Path, root: Path, policy: dict[str, Any]) -> bool:
     relative = path.relative_to(root).as_posix()
-    return any(relative == item or relative.startswith(item) for item in policy["repository_scan"]["exclude"])
+    excluded = policy["repository_scan"]["exclude"]
+    return any(relative == item or relative.startswith(item) for item in excluded)
 
 
 def scan_repository(root: Path, policy: dict[str, Any]) -> list[Finding]:
     extensions = set(policy["repository_scan"]["extensions"])
     findings: list[Finding] = []
     for path in root.rglob("*"):
-        if not path.is_file() or path.suffix not in extensions or _excluded(path, root, policy):
+        if not path.is_file() or path.suffix not in extensions:
+            continue
+        if _excluded(path, root, policy):
             continue
         try:
             text = path.read_text(encoding="utf-8")
         except UnicodeDecodeError:
             continue
-        findings.extend(scan_text(text, policy, path.relative_to(root).as_posix(), include_media=False))
+        source = path.relative_to(root).as_posix()
+        findings.extend(scan_text(text, policy, source, include_media=False))
     return findings
 
 
-def severity_at_least(severity: str, threshold: str, policy: dict[str, Any]) -> bool:
+def severity_at_least(
+    severity: str,
+    threshold: str,
+    policy: dict[str, Any],
+) -> bool:
     order = list(policy["severity_order"])
     return order.index(severity) >= order.index(threshold)
 
@@ -124,14 +178,21 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument("--scan-repository", type=Path)
     parser.add_argument("--source", default="input")
     parser.add_argument("--json-out", type=Path)
-    parser.add_argument("--fail-on", choices=("review", "warn", "block", "never"), default="block")
+    parser.add_argument(
+        "--fail-on",
+        choices=("review", "warn", "block", "never"),
+        default="block",
+    )
     parser.add_argument("--no-media-review", action="store_true")
     args = parser.parse_args(argv)
 
     policy = load_policy(args.policy)
     if args.text_file:
         findings = scan_text(
-            args.text_file.read_text(encoding="utf-8"), policy, args.source, include_media=not args.no_media_review
+            args.text_file.read_text(encoding="utf-8"),
+            policy,
+            args.source,
+            include_media=not args.no_media_review,
         )
     elif args.scan_repository:
         findings = scan_repository(args.scan_repository.resolve(), policy)
@@ -141,7 +202,10 @@ def main(argv: list[str] | None = None) -> int:
     _emit(findings, args.json_out)
     if args.fail_on == "never":
         return 0
-    return 2 if any(severity_at_least(item.severity, args.fail_on, policy) for item in findings) else 0
+    blocked = any(
+        severity_at_least(item.severity, args.fail_on, policy) for item in findings
+    )
+    return 2 if blocked else 0
 
 
 if __name__ == "__main__":

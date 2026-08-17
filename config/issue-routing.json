@@ -1,0 +1,31 @@
+{
+  "version": 1,
+  "rules": [
+    {"needle": "Phase 0 — Bootstrap", "labels": ["roadmap", "roadmap:phase-0-bootstrap"]},
+    {"needle": "Phase 1 — Hardware discovery", "labels": ["roadmap", "roadmap:phase-1-hardware-discovery"]},
+    {"needle": "Phase 2 — Legacy execution service", "labels": ["roadmap", "roadmap:phase-2-execution-service"]},
+    {"needle": "Phase 3 — Scheduler", "labels": ["roadmap", "roadmap:phase-3-scheduler"]},
+    {"needle": "Phase 4 — Numerical libraries", "labels": ["roadmap", "roadmap:phase-4-numerical-libraries"]},
+    {"needle": "Phase 5 — Compiler/lowering", "labels": ["roadmap", "roadmap:phase-5-compiler-lowering"]},
+    {"needle": "Phase 6 — Python/scientific front ends", "labels": ["roadmap", "roadmap:phase-6-python-scientific"]},
+    {"needle": "Phase 7 — PyTorch kepler backend", "labels": ["roadmap", "roadmap:phase-7-pytorch-kepler"]},
+    {"needle": "Phase 8 — General legacy CUDA framework", "labels": ["roadmap", "roadmap:phase-8-general-framework"]},
+    {"needle": "### Compatibility class\n\nNative", "labels": ["compatibility", "compatibility:native"]},
+    {"needle": "### Compatibility class\n\nLowering", "labels": ["compatibility", "compatibility:lowering"]},
+    {"needle": "### Compatibility class\n\nSubstitution", "labels": ["compatibility", "compatibility:substitution"]},
+    {"needle": "### Compatibility class\n\nCPU fallback", "labels": ["compatibility", "compatibility:cpu-fallback"]},
+    {"needle": "### Compatibility class\n\nUnsupported", "labels": ["compatibility", "compatibility:unsupported"]},
+    {"needle": "### Target\n\nKepler / Tesla K80", "labels": ["compatibility", "compatibility:kepler", "reference", "reference:tesla-k80"]},
+    {"needle": "### Target\n\nsm_37", "labels": ["compatibility", "compatibility:sm37"]},
+    {"needle": "### Target\n\nCUDA 11.x", "labels": ["compatibility", "compatibility:cuda11"]},
+    {"needle": "### Target\n\nR470 driver", "labels": ["compatibility", "compatibility:r470"]},
+    {"needle": "### Target\n\nLegacy CUDA library", "labels": ["compatibility", "compatibility:legacy-library"]},
+    {"needle": "### Target\n\nPyTorch / PrivateUse1", "labels": ["compatibility", "compatibility:pytorch", "reference", "reference:pytorch-privateuse1"]},
+    {"needle": "### Target\n\nFuture retired GPU generation", "labels": ["compatibility", "compatibility:future-generation"]},
+    {"needle": "### Document class\n\nArchitecture", "labels": ["role", "role:architecture-approver"]},
+    {"needle": "### Document class\n\nCompatibility", "labels": ["role", "role:compatibility-approver"]},
+    {"needle": "### Document class\n\nReference platform", "labels": ["role", "role:hardware-validator"]},
+    {"needle": "### Document class\n\nSecurity", "labels": ["role", "role:security-reviewer"]},
+    {"needle": "### Document class\n\nGovernance / role assignments", "labels": ["role", "role:project-owner"]}
+  ]
+}

@@ -33,7 +33,12 @@ jobs:
       - name: Python lint
         run: python -m ruff check python scripts
       - name: Governance and moderation tests
-        run: python -m pytest python/tests/test_content_policy.py python/tests/test_repository_policy.py python/tests/test_github_config.py
+        run: >-
+          python -m pytest
+          python/tests/test_content_policy.py
+          python/tests/test_moderate_event.py
+          python/tests/test_repository_policy.py
+          python/tests/test_github_config.py
 
   formatting-static-analysis:
     name: formatting-static-analysis

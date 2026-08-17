@@ -11,6 +11,8 @@ on:
     types: [created, edited]
   pull_request:
     types: [opened, edited]
+  pull_request_review:
+    types: [submitted, edited]
   pull_request_review_comment:
     types: [created, edited]
   workflow_dispatch:
@@ -52,7 +54,9 @@ jobs:
               state: 'open',
               per_page: 100,
             });
-            const existing = openIssues.find(item => !item.pull_request && (item.body || '').includes(marker));
+            const existing = openIssues.find(
+              item => !item.pull_request && (item.body || '').includes(marker),
+            );
 
             if (!result.requires_review) {
               if (existing) {
@@ -99,7 +103,12 @@ jobs:
                 repo: context.repo.repo,
                 title: `Moderation review: ${result.source_key}`,
                 body: reviewBody,
-                labels: ['operational', 'discussion', 'role', 'role:community-moderator'],
+                labels: [
+                  'operational',
+                  'discussion',
+                  'role',
+                  'role:community-moderator',
+                ],
               });
               reviewIssue = created.data;
             } else {

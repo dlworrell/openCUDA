@@ -62,24 +62,41 @@ def validate(path: Path) -> list[str]:
         uses = step.get("uses")
         if isinstance(uses, str) and not uses.startswith("./"):
             if "@" not in uses:
-                errors.append(f"{path}:{job_name}[{index}]: action must have an explicit version")
+                errors.append(
+                    f"{path}:{job_name}[{index}]: action must have an explicit version"
+                )
             else:
                 action, ref = uses.rsplit("@", 1)
                 owner = action.split("/", 1)[0]
                 if owner not in ALLOWED_ACTION_OWNERS:
-                    errors.append(f"{path}:{job_name}[{index}]: action owner {owner!r} is not allowlisted")
-                if not re.fullmatch(r"(?:v\d+(?:\.\d+(?:\.\d+)?)?|[0-9a-f]{40})", ref):
-                    errors.append(f"{path}:{job_name}[{index}]: action ref {ref!r} must be a version tag or full SHA")
+                    errors.append(
+                        f"{path}:{job_name}[{index}]: action owner {owner!r} "
+                        "is not allowlisted"
+                    )
+                version_or_sha = re.fullmatch(
+                    r"(?:v\d+(?:\.\d+(?:\.\d+)?)?|[0-9a-f]{40})",
+                    ref,
+                )
+                if not version_or_sha:
+                    errors.append(
+                        f"{path}:{job_name}[{index}]: action ref {ref!r} must be "
+                        "a version tag or full SHA"
+                    )
 
         run = step.get("run")
         if isinstance(run, str):
             lowered = run.casefold()
             if re.search(r"(?:curl|wget)[^\n|]*\|\s*(?:bash|sh)\b", lowered):
-                errors.append(f"{path}:{job_name}[{index}]: pipe-to-shell download is prohibited")
+                errors.append(
+                    f"{path}:{job_name}[{index}]: pipe-to-shell download is prohibited"
+                )
             for expression in UNTRUSTED_EXPRESSIONS:
-                if "${{ " + expression in run or "${{" + expression in run:
+                spaced = "${{ " + expression
+                compact = "${{" + expression
+                if spaced in run or compact in run:
                     errors.append(
-                        f"{path}:{job_name}[{index}]: untrusted event text must not be interpolated directly into shell code ({expression})"
+                        f"{path}:{job_name}[{index}]: untrusted event text must not "
+                        f"be interpolated directly into shell code ({expression})"
                     )
     return errors
 

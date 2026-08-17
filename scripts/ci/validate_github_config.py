@@ -70,14 +70,26 @@ def validate_form(path: Path, discussion: bool = False) -> list[str]:
 def collect_documented_labels(root: Path) -> set[str]:
     text = "\n".join(
         (root / path).read_text(encoding="utf-8")
-        for path in ("docs/LABEL_TAXONOMY.md", "docs/GOVERNANCE_TAXONOMY.md")
+        for path in (
+            "docs/LABEL_TAXONOMY.md",
+            "docs/GOVERNANCE_TAXONOMY.md",
+        )
+    )
+    prefixes = (
+        "operational",
+        "architectural",
+        "compatibility",
+        "developmental",
+        "discussion",
+        "reference",
+        "roadmap",
+        "role",
+        "access",
     )
     labels: set[str] = set()
     for token in text.split("`"):
         token = token.strip()
-        if token and " " not in token and any(token.startswith(prefix) for prefix in (
-            "operational", "architectural", "compatibility", "developmental", "discussion", "reference", "roadmap", "role", "access"
-        )):
+        if token and " " not in token and any(token.startswith(prefix) for prefix in prefixes):
             labels.add(token)
     return labels
 
@@ -89,19 +101,29 @@ def validate(root: Path) -> list[str]:
 
     config = load_yaml(issue_dir / "config.yml")
     if config.get("blank_issues_enabled") is not False:
-        errors.append(".github/ISSUE_TEMPLATE/config.yml: blank_issues_enabled must be false")
+        errors.append(
+            ".github/ISSUE_TEMPLATE/config.yml: blank_issues_enabled must be false"
+        )
     if not config.get("contact_links"):
-        errors.append(".github/ISSUE_TEMPLATE/config.yml: contact_links must route exploratory work")
+        errors.append(
+            ".github/ISSUE_TEMPLATE/config.yml: contact_links must route exploratory work"
+        )
 
     for path in sorted(issue_dir.glob("*.yml")):
         if path.name != "config.yml":
             errors.extend(validate_form(path))
 
-    category_contract = json.loads((root / "config" / "discussion-categories.json").read_text(encoding="utf-8"))
-    expected_forms = {item["form"] for item in category_contract["categories"] if item.get("form")}
+    category_path = root / "config" / "discussion-categories.json"
+    category_contract = json.loads(category_path.read_text(encoding="utf-8"))
+    expected_forms = {
+        item["form"] for item in category_contract["categories"] if item.get("form")
+    }
     actual_forms = {path.name for path in discussion_dir.glob("*.yml")}
     if expected_forms != actual_forms:
-        errors.append(f"Discussion forms mismatch: expected={sorted(expected_forms)} actual={sorted(actual_forms)}")
+        errors.append(
+            "Discussion forms mismatch: "
+            f"expected={sorted(expected_forms)} actual={sorted(actual_forms)}"
+        )
     slugs = [item["slug"] for item in category_contract["categories"]]
     if len(slugs) != len(set(slugs)):
         errors.append("config/discussion-categories.json: duplicate category slug")
@@ -111,11 +133,14 @@ def validate(root: Path) -> list[str]:
             errors.append(f"{item['slug']}: poll categories must not declare a form")
         if form:
             if Path(form).stem != item["slug"]:
-                errors.append(f"{form}: filename must match category slug {item['slug']}")
+                errors.append(
+                    f"{form}: filename must match category slug {item['slug']}"
+                )
             errors.extend(validate_form(discussion_dir / form, discussion=True))
 
     documented_labels = collect_documented_labels(root)
-    routing = json.loads((root / "config" / "issue-routing.json").read_text(encoding="utf-8"))
+    routing_path = root / "config" / "issue-routing.json"
+    routing = json.loads(routing_path.read_text(encoding="utf-8"))
     for rule in routing.get("rules", []):
         if not rule.get("needle") or not rule.get("labels"):
             errors.append("config/issue-routing.json: every rule needs needle and labels")
@@ -125,8 +150,13 @@ def validate(root: Path) -> list[str]:
 
     workflows = root / ".github" / "workflows"
     required_workflows = {
-        "ci.yml", "issue-routing.yml", "bootstrap-discussions.yml", "kepler-self-hosted.yml",
-        "compliance.yml", "content-moderation.yml", "repository-audit.yml"
+        "ci.yml",
+        "issue-routing.yml",
+        "bootstrap-discussions.yml",
+        "kepler-self-hosted.yml",
+        "compliance.yml",
+        "content-moderation.yml",
+        "repository-audit.yml",
     }
     existing = {path.name for path in workflows.glob("*.yml")}
     missing = required_workflows - existing

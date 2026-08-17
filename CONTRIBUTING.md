@@ -11,6 +11,17 @@ openCUDA is pre-alpha compatibility research. Changes should prioritize correctn
 - Do not introduce raw CUDA runtime pointers into the public ABI.
 - Prefer deterministic CPU reference implementations for numerical correctness tests.
 
+## Labels
+
+Issues and pull requests use the repository taxonomy in [`docs/LABEL_TAXONOMY.md`](docs/LABEL_TAXONOMY.md).
+
+- Keep GitHub type/community/state labels such as `bug`, `enhancement`, `documentation`, and `question` orthogonal to the project taxonomy.
+- Apply the broad family label whenever a qualified family label is used; for example, pair `architectural` with `architectural:topology`.
+- Planned implementation work should normally carry `roadmap` plus one current `roadmap:phase-*` label.
+- Use compatibility labels to describe actual execution/support behavior, not merely incomplete work.
+- Do not create one-off labels when an existing taxonomy term describes the work.
+- Update the taxonomy when architecture, compatibility boundaries, supported hosts, or roadmap phases materially change.
+
 ## Languages
 
 - C17: stable ABI/runtime.

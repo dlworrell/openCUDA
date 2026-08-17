@@ -103,6 +103,30 @@ def collect_documented_labels(root: Path) -> set[str]:
     return labels
 
 
+def collect_rendered_dropdown_choices(issue_dir: Path) -> set[str]:
+    rendered: set[str] = set()
+    for path in sorted(issue_dir.glob("*.yml")):
+        if path.name == "config.yml":
+            continue
+        document = load_yaml(path)
+        if not isinstance(document, dict):
+            continue
+        for item in document.get("body", []):
+            if not isinstance(item, dict) or item.get("type") != "dropdown":
+                continue
+            attributes = item.get("attributes", {})
+            if not isinstance(attributes, dict):
+                continue
+            label = attributes.get("label")
+            options = attributes.get("options", [])
+            if not isinstance(label, str) or not isinstance(options, list):
+                continue
+            for option in options:
+                if isinstance(option, str):
+                    rendered.add(f"### {label}\n\n{option}")
+    return rendered
+
+
 def validate(root: Path) -> list[str]:
     errors: list[str] = []
     issue_dir = root / ".github" / "ISSUE_TEMPLATE"
@@ -148,12 +172,21 @@ def validate(root: Path) -> list[str]:
             errors.extend(validate_form(discussion_dir / form, discussion=True))
 
     documented_labels = collect_documented_labels(root)
+    rendered_choices = collect_rendered_dropdown_choices(issue_dir)
     routing_path = root / "config" / "issue-routing.json"
     routing = json.loads(routing_path.read_text(encoding="utf-8"))
     for rule in routing.get("rules", []):
-        if not rule.get("needle") or not rule.get("labels"):
+        needle = rule.get("needle")
+        labels = rule.get("labels")
+        if not needle or not labels:
             errors.append("config/issue-routing.json: every rule needs needle and labels")
-        for label in rule.get("labels", []):
+            continue
+        if needle.startswith("### ") and needle not in rendered_choices:
+            errors.append(
+                "config/issue-routing.json: routing needle does not match any "
+                f"rendered dropdown choice: {needle!r}"
+            )
+        for label in labels:
             if label not in documented_labels:
                 errors.append(f"config/issue-routing.json: undocumented label {label}")
 

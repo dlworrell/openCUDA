@@ -1,8 +1,9 @@
 #ifndef OPENCUDA_LEGACY_CUDA_H
 #define OPENCUDA_LEGACY_CUDA_H
 
-#include <stdint.h>
 #include "opencuda.h"
+
+#include <stdint.h>
 
 #ifdef __cplusplus
 extern "C" {

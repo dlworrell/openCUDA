@@ -82,9 +82,10 @@ src/asm/                Architecture/OS assembly primitives
 src/legacy_cuda/        Optional CUDA 11.x / sm_37 backend
 python/opencuda/        Python package and future bindings
 scripts/                Diagnostics and developer tooling
-docs/                   Architecture, compatibility, roadmap, discussion record
+docs/                   Architecture, compatibility, governance, roadmap, discussion record
 tests/                  Native tests
 .github/workflows/       Cross-platform CI
+.github/CODEOWNERS       Review ownership/routing baseline
 ```
 
 ## Documentation
@@ -95,8 +96,16 @@ tests/                  Native tests
 - [`docs/REFERENCE_PLATFORM.md`](docs/REFERENCE_PLATFORM.md) — DL380p/CUBIX/K80 reference node
 - [`docs/DEVELOPMENT.md`](docs/DEVELOPMENT.md) — toolchains, build presets, CI, and coding workflow
 - [`docs/ROADMAP.md`](docs/ROADMAP.md) — staged implementation plan
-- [`docs/LABEL_TAXONOMY.md`](docs/LABEL_TAXONOMY.md) — repository label families, qualified labels, and application rules
+- [`docs/LABEL_TAXONOMY.md`](docs/LABEL_TAXONOMY.md) — technical repository label families, qualified labels, and application rules
+- [`docs/GOVERNANCE_TAXONOMY.md`](docs/GOVERNANCE_TAXONOMY.md) — role-routing and L0–L7 access/governance labels
+- [`GOVERNANCE.md`](GOVERNANCE.md) — administration levels, functional roles, approval matrix, task assignment, merge authority, and escalation
+- [`docs/ROLE_ASSIGNMENTS.md`](docs/ROLE_ASSIGNMENTS.md) — authoritative user/team role registry and bootstrap assignments
+- [`.github/CODEOWNERS`](.github/CODEOWNERS) — machine-readable review ownership baseline
 - [`SECURITY.md`](SECURITY.md) — security and legacy-driver risk policy
+
+## Governance summary
+
+openCUDA separates repository access from project authority. Pull-request review, task assignment, architecture/compatibility approval, documentation approval, security review, releases, hardware validation, and repository administration are delegated as explicit functional roles. Administration levels run from **L0 Observer** through **L7 Project Owner**, with least privilege as the default. See `GOVERNANCE.md` for the binding policy.
 
 ## Upstream references
 

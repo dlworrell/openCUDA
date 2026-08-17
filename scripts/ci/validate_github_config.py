@@ -28,9 +28,20 @@ def validate_form(path: Path, discussion: bool = False) -> list[str]:
     document = load_yaml(path)
     if not isinstance(document, dict):
         return [f"{path}: form must be a mapping"]
-    for key in ("name", "description", "body"):
+
+    required_keys = ("title", "body") if discussion else ("name", "description", "body")
+    for key in required_keys:
         if key not in document:
             errors.append(f"{path}: missing top-level {key}")
+
+    if discussion:
+        title = document.get("title")
+        if not isinstance(title, str):
+            errors.append(f"{path}: top-level title must be a string")
+        labels = document.get("labels", [])
+        if labels is not None and not isinstance(labels, list):
+            errors.append(f"{path}: top-level labels must be a list")
+
     body = document.get("body", [])
     if not isinstance(body, list) or not body:
         errors.append(f"{path}: body must be a non-empty list")
@@ -62,8 +73,6 @@ def validate_form(path: Path, discussion: bool = False) -> list[str]:
             errors.append(f"{path}: dropdown {item_id or index} needs options")
         if item_type == "checkboxes" and not attributes.get("options"):
             errors.append(f"{path}: checkboxes {item_id or index} needs options")
-    if discussion and path.stem != path.name.removesuffix(".yml"):
-        errors.append(f"{path}: unexpected Discussion filename")
     return errors
 
 

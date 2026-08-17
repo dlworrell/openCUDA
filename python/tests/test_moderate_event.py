@@ -3,7 +3,6 @@ from __future__ import annotations
 from pathlib import Path
 
 import pytest
-
 from scripts.ci.content_policy import load_policy, scan_text
 from scripts.ci.moderate_event import extract
 

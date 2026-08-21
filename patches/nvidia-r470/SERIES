@@ -1,0 +1,27 @@
+# Canonical NVIDIA 470.256.02 kernel-interface patch order.
+# Source set is pinned by patches/nvidia-r470/UPSTREAM.
+# Paths prefixed upstream/ are materialized from the pinned upstream repository.
+# Paths prefixed local/ are maintained by openCUDA.
+
+upstream/0001-Fix-conftest-to-ignore-implicit-function-declaration.patch
+upstream/0002-Fix-conftest-to-use-a-short-wchar_t.patch
+upstream/0003-Fix-conftest-to-use-nv_drm_gem_vmap-which-has-the-se.patch
+upstream/kernel-6.10.patch
+upstream/kernel-6.12.patch
+upstream/nvidia-470xx-fix-gcc-15.patch
+upstream/nvidia-470xx-fix-linux-6.13.patch
+upstream/nvidia-470xx-fix-linux-6.14.patch
+upstream/nvidia-470xx-fix-linux-6.15.patch
+upstream/nvidia-470xx-fix-linux-6.17.patch
+upstream/nvidia-470xx-fix-linux-6.19-part1.patch
+upstream/nvidia-470xx-fix-linux-6.19-part2.patch
+upstream/nvidia-470xx-fix-linux-7.0.patch
+upstream/nvidia-470xx-fix-linux-7.2-part1.patch
+upstream/nvidia-470xx-fix-linux-7.2-part2.patch
+upstream/nvidia-470xx-fix-linux-7.2-part3.patch
+upstream/nvidia-470xx-fix-linux-7.3.patch
+upstream/disable-objtool-override.patch
+upstream/enable-drm-modeset-by-default.patch
+
+# Add openCUDA-specific patches below this line only after upstream patches.
+# local/0001-....patch

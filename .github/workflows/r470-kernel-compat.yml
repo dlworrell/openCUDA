@@ -1,0 +1,81 @@
+name: R470 kernel compatibility
+
+on:
+  pull_request:
+    paths:
+      - 'patches/nvidia-r470/**'
+      - 'scripts/r470/**'
+      - '.github/workflows/r470-kernel-compat.yml'
+  push:
+    branches: [main]
+    paths:
+      - 'patches/nvidia-r470/**'
+      - 'scripts/r470/**'
+      - '.github/workflows/r470-kernel-compat.yml'
+  workflow_dispatch:
+    inputs:
+      hardware_build:
+        description: 'Build patched R470 modules on the self-hosted Kepler runner'
+        required: false
+        default: false
+        type: boolean
+
+permissions:
+  contents: read
+
+jobs:
+  metadata:
+    name: Series integrity
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+      - name: Verify series metadata
+        run: sh scripts/r470/verify-series.sh
+      - name: Verify pinned upstream patch inventory
+        run: |
+          set -eu
+          . patches/nvidia-r470/UPSTREAM
+          git clone --quiet --no-checkout "$PATCH_UPSTREAM_REPOSITORY" /tmp/r470-upstream
+          git -C /tmp/r470-upstream checkout --quiet --detach "$PATCH_UPSTREAM_COMMIT"
+          while IFS= read -r entry || [ -n "$entry" ]; do
+            case "$entry" in
+              ''|'#'*) continue ;;
+              upstream/*)
+                test -f "/tmp/r470-upstream/$PATCH_UPSTREAM_PATH/${entry#upstream/}"
+                ;;
+              local/*)
+                test -f "patches/nvidia-r470/$entry"
+                ;;
+              *) exit 1 ;;
+            esac
+          done < patches/nvidia-r470/SERIES
+
+  kepler-build:
+    name: K80 R470 module build
+    if: ${{ github.event_name == 'workflow_dispatch' && inputs.hardware_build }}
+    runs-on: [self-hosted, linux, x64, kepler, cuda11]
+    timeout-minutes: 45
+    steps:
+      - uses: actions/checkout@v5
+      - name: Record build environment
+        run: |
+          uname -a
+          cc --version | head -n 1
+          test -d "/lib/modules/$(uname -r)/build"
+      - name: Fetch and apply pinned R470 series
+        run: sh scripts/r470/apply-series.sh
+      - name: Build NVIDIA kernel modules
+        run: |
+          set -eu
+          . patches/nvidia-r470/UPSTREAM
+          make -C ".cache/r470/work/NVIDIA-Linux-x86_64-$NVIDIA_DRIVER_VERSION/kernel" \
+            -j"$(getconf _NPROCESSORS_ONLN)" modules
+      - name: Record module artifacts
+        run: |
+          set -eu
+          . patches/nvidia-r470/UPSTREAM
+          find ".cache/r470/work/NVIDIA-Linux-x86_64-$NVIDIA_DRIVER_VERSION/kernel" \
+            -name '*.ko' -print -exec modinfo {} \; || true
+
+# Runtime installation/loading is deliberately excluded from ordinary CI.
+# Hardware promotion requires a separate controlled validation step on the K80 node.

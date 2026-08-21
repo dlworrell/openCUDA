@@ -1,0 +1,31 @@
+{
+  "schema_version": 1,
+  "driver": "470.256.02",
+  "patch_upstream_commit": "b68e153b018bb0b5cd4cbd72cb66c84e3b7d18e9",
+  "kernels": [
+    {
+      "line": "6.12",
+      "class": "lts",
+      "openCUDA_status": "reference-candidate",
+      "hardware_validation_required": true
+    },
+    {
+      "line": "6.18",
+      "class": "lts",
+      "openCUDA_status": "build-test-target",
+      "hardware_validation_required": true
+    },
+    {
+      "line": "7.2",
+      "class": "current-generation",
+      "openCUDA_status": "build-test-target",
+      "hardware_validation_required": true
+    },
+    {
+      "line": "7.3",
+      "class": "development",
+      "openCUDA_status": "experimental",
+      "hardware_validation_required": true
+    }
+  ]
+}

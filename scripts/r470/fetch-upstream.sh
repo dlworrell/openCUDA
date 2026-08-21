@@ -27,7 +27,7 @@ fi
 
 (
     cd "$CACHE"
-    sha256sum --check "$ROOT/patches/nvidia-r470/SHA256SUMS"
+    sha512sum --check "$ROOT/patches/nvidia-r470/SHA512SUMS"
 )
 
 rm -rf "$CACHE/patch-upstream" "$PATCH_DST"

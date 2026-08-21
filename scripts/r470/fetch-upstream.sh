@@ -1,12 +1,12 @@
 #!/usr/bin/env sh
 set -eu
 
-ROOT=$(CDPATH= cd -- "$(dirname -- "$0")/../.." && pwd)
+ROOT=$(CDPATH='' cd -- "$(dirname -- "$0")/../.." && pwd)
 META="$ROOT/patches/nvidia-r470/UPSTREAM"
 CACHE=${R470_CACHE_DIR:-"$ROOT/.cache/r470"}
 PATCH_DST="$CACHE/upstream-patches"
 
-# shellcheck disable=SC1090
+# shellcheck disable=SC1091
 . "$META"
 
 mkdir -p "$CACHE"

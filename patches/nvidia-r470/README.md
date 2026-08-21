@@ -15,10 +15,17 @@ The initial series is derived from and pinned to:
 - project: `joanbm/nvidia-470xx-linux-mainline`
 - commit: `b68e153b018bb0b5cd4cbd72cb66c84e3b7d18e9`
 - upstream commit message: `Graduate patch for Linux 7.3`
-- upstream license for the patch project: GPL-2.0
 - NVIDIA driver version: `470.256.02`
 
 The pinned upstream series currently carries compatibility changes from Linux 6.10 through the Linux 7.3 development line, including compiler/conftest fixes. openCUDA must never silently follow the upstream default branch; changing the pinned commit requires review and CI evidence.
+
+### Third-party patch licensing
+
+The pinned community patch repository does not expose a repository-level license file at the pinned commit. Its README contains an `AS IS` warranty disclaimer but does not state a redistribution license for the repository as a whole. Therefore openCUDA does **not** vendor the third-party patch bodies by default.
+
+Instead, openCUDA records the exact upstream repository, commit, ordered patch filenames, and provenance, then retrieves the patches from that pinned commit during the build/bootstrap process. If an individual patch has a clearly attributable license permitting redistribution, or the upstream project later publishes an applicable license, vendoring can be considered through a separate review.
+
+openCUDA-owned patches belong under `local/` and must carry explicit authorship and license/provenance metadata.
 
 ## Layout
 
@@ -27,6 +34,7 @@ patches/nvidia-r470/
 ├── README.md                 # policy and maintenance contract
 ├── SERIES                    # canonical ordered patch list
 ├── UPSTREAM                  # pinned provenance
+├── SHA512SUMS                # integrity record for NVIDIA runfile
 ├── local/                    # openCUDA-owned patches, if needed
 └── staging/                  # experimental patches; never production by default
 
@@ -35,8 +43,6 @@ scripts/r470/
 ├── apply-series.sh           # apply canonical series in deterministic order
 └── verify-series.sh          # structural/provenance checks
 ```
-
-The upstream patch files are synchronized from the pinned GPL-2.0 patch repository during the bootstrap phase. openCUDA-owned modifications belong in `local/` and must carry normal patch authorship and Signed-off-by metadata.
 
 ## Compatibility tiers
 

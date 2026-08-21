@@ -40,9 +40,13 @@ case "$PATCH_UPSTREAM_COMMIT" in
     *) echo "error: PATCH_UPSTREAM_COMMIT is not a pinned Git commit" >&2; fail=1 ;;
 esac
 
-if ! grep -q "  $NVIDIA_RUNFILE\$" "$ROOT/patches/nvidia-r470/SHA256SUMS"; then
-    echo "error: NVIDIA runfile missing from SHA256SUMS" >&2
+if ! grep -q "  $NVIDIA_RUNFILE\$" "$ROOT/patches/nvidia-r470/SHA512SUMS"; then
+    echo "error: NVIDIA runfile missing from SHA512SUMS" >&2
     fail=1
+fi
+
+if [ "$PATCH_UPSTREAM_LICENSE" = "NOASSERTION" ]; then
+    printf '%s\n' "notice: third-party patch repository has no asserted repository-level license; patches will be fetched, not vendored."
 fi
 
 for dir in local staging; do

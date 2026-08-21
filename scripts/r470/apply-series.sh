@@ -7,7 +7,7 @@ SERIES="$ROOT/patches/nvidia-r470/SERIES"
 PATCH_UPSTREAM="$CACHE/upstream-patches"
 WORK="$CACHE/work"
 
-"$ROOT/scripts/r470/fetch-upstream.sh"
+sh "$ROOT/scripts/r470/fetch-upstream.sh"
 
 # shellcheck disable=SC1090
 . "$ROOT/patches/nvidia-r470/UPSTREAM"

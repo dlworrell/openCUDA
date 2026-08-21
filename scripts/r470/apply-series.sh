@@ -1,7 +1,7 @@
 #!/usr/bin/env sh
 set -eu
 
-ROOT=$(CDPATH= cd -- "$(dirname -- "$0")/../.." && pwd)
+ROOT=$(CDPATH='' cd -- "$(dirname -- "$0")/../.." && pwd)
 CACHE=${R470_CACHE_DIR:-"$ROOT/.cache/r470"}
 SERIES="$ROOT/patches/nvidia-r470/SERIES"
 PATCH_UPSTREAM="$CACHE/upstream-patches"
@@ -9,7 +9,7 @@ WORK="$CACHE/work"
 
 sh "$ROOT/scripts/r470/fetch-upstream.sh"
 
-# shellcheck disable=SC1090
+# shellcheck disable=SC1091
 . "$ROOT/patches/nvidia-r470/UPSTREAM"
 
 rm -rf "$WORK"

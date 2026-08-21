@@ -1,0 +1,27 @@
+{
+  "schema_version": 1,
+  "platform": "HP ProLiant DL380p Gen8",
+  "tracking_issue": 36,
+  "generated_or_updated": "2026-08-21",
+  "records": [],
+  "record_schema": {
+    "component_family": "string",
+    "hardware_model": "string|null",
+    "os_family": "string|null",
+    "support_class": "hpe-proprietary|vendor-upstream|linux-in-tree|freebsd-in-tree|openbsd-in-tree|netbsd-in-tree|firmware-only|unknown",
+    "asset_name": "string",
+    "version": "string|null",
+    "release_date": "YYYY-MM-DD|null",
+    "vendor_id": "string|null",
+    "source_url": "string",
+    "retrieval_date": "YYYY-MM-DD",
+    "checksum_algorithm": "string|null",
+    "checksum": "string|null",
+    "hardware_identifiers": [],
+    "redistribution_status": "allowed|restricted|unknown|metadata-only",
+    "availability": "live|gated|dead|archived|unknown",
+    "archive_url": "string|null",
+    "reference_host_applicability": "unknown|candidate|installed|not-installed",
+    "notes": "string|null"
+  }
+}

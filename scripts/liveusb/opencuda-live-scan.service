@@ -1,0 +1,18 @@
+[Unit]
+Description=openCUDA DL380p/CUBIX acquisition and staged K80 scan
+After=NetworkManager.service multi-user.target
+Wants=NetworkManager.service
+
+[Service]
+Type=oneshot
+ExecStart=/usr/local/sbin/opencuda_usb_scan.sh
+StandardInput=tty
+StandardOutput=tty
+StandardError=tty
+TTYPath=/dev/tty1
+TTYReset=yes
+TTYVHangup=yes
+RemainAfterExit=yes
+
+[Install]
+WantedBy=multi-user.target

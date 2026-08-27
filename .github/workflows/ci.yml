@@ -83,6 +83,17 @@ jobs:
       - name: Build AArch64 including assembly
         run: cmake --build build-aarch64 --config Release --parallel
 
+  live-usb-scanner:
+    name: live-usb-scanner
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v5
+      - name: Check shell syntax
+        run: bash -n scripts/liveusb/opencuda_usb_scan.sh tests/liveusb/test_usb_scan.sh
+      - name: Run mixed-GPU fixture
+        run: bash tests/liveusb/test_usb_scan.sh
+
   python:
     name: python-${{ matrix.python-version }}
     strategy:

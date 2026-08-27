@@ -102,10 +102,12 @@ initialize_run() {
     EVENT_LOG="$RUN_DIR/events.log"
     TELEMETRY="$RUN_DIR/nvidia-telemetry.csv"
     ABORT_FILE="$RUN_DIR/LOAD_ABORTED"
-    printf '# openCUDA DL380p/CUBIX live-USB report\n\n' >"$REPORT"
-    printf -- '- Scanner version: `%s`\n' "$SCAN_VERSION" >>"$REPORT"
-    printf -- '- Started: `%s`\n' "$(date -u +'%Y-%m-%dT%H:%M:%SZ')" >>"$REPORT"
-    printf -- '- Expected components: CUBIX Desktop Elite; CUBIX 400-A07994 HIC; three NVIDIA Tesla K80 900-22080-6300-000 boards; NVIDIA Quadro 6000 host display GPU; Intel Xeon Phi 5110P\n' >>"$REPORT"
+    {
+        printf '# openCUDA DL380p/CUBIX live-USB report\n\n'
+        printf -- "- Scanner version: \`%s\`\n" "$SCAN_VERSION"
+        printf -- "- Started: \`%s\`\n" "$(date -u +'%Y-%m-%dT%H:%M:%SZ')"
+        printf -- '- Expected components: CUBIX Desktop Elite; CUBIX 400-A07994 HIC; three NVIDIA Tesla K80 900-22080-6300-000 boards; NVIDIA Quadro 6000 host display GPU; Intel Xeon Phi 5110P\n'
+    } >"$REPORT"
     : >"$EVENT_LOG"
     log "Results directory: $RUN_DIR"
 }
@@ -288,10 +290,18 @@ run_staged_test() {
 }
 
 package_results() {
-    printf '\n- Finished: `%s`\n' "$(date -u +'%Y-%m-%dT%H:%M:%SZ')" >>"$REPORT"
-    printf -- '- Final status: `%s`\n' "$FINAL_STATUS" >>"$REPORT"
+    {
+        printf "\n- Finished: \`%s\`\n" "$(date -u +'%Y-%m-%dT%H:%M:%SZ')"
+        printf -- "- Final status: \`%s\`\n" "$FINAL_STATUS"
+    } >>"$REPORT"
     local archive="$RUN_DIR/opencuda-scan-results.tar.gz"
-    tar -C "$RUN_DIR" --exclude="$(basename "$archive")" -czf "$archive" .
+    local archive_tmp
+    archive_tmp="$(mktemp "$RESULT_ROOT/.opencuda-results.XXXXXX.tar.gz")"
+    if ! tar -C "$RUN_DIR" -czf "$archive_tmp" .; then
+        rm -f "$archive_tmp"
+        return 1
+    fi
+    mv "$archive_tmp" "$archive"
     printf '%s\n' "$archive"
 }
 
@@ -366,7 +376,11 @@ main() {
     capture "Post-test NVIDIA state" nvidia-smi -q
     capture "Post-test kernel error extract" sh -c "dmesg | grep -Ei 'NVRM|Xid|AER|PCIe|IOMMU|EDAC|ECC|thermal|overheat' || true"
     local archive
-    archive="$(package_results)"
+    if ! archive="$(package_results)"; then
+        log "Result packaging failed; uncompressed results remain at $RUN_DIR"
+        printf '\nScan incomplete: result packaging failed\nResults: %s\n' "$RUN_DIR"
+        return 1
+    fi
     send_gmail "$archive" || true
     printf '\nScan complete: %s\nResults: %s\n' "$FINAL_STATUS" "$RUN_DIR"
 }

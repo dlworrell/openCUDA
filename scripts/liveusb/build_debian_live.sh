@@ -86,7 +86,11 @@ mkdir -p \
     config/hooks/live
 
 cat >config/archives/bookworm-backports.pref.chroot <<'EOF'
-Package: *
+Package: nvidia-tesla-470-* libnvidia-tesla-470-* xserver-xorg-video-nvidia-tesla-470
+Pin: release n=bookworm-backports
+Pin-Priority: 990
+
+Package: firmware-atheros firmware-brcm80211 firmware-iwlwifi firmware-libertas firmware-mediatek firmware-realtek
 Pin: release n=bookworm-backports
 Pin-Priority: 990
 EOF
@@ -117,13 +121,12 @@ network-manager
 wpasupplicant
 wireless-regdb
 rfkill
-firmware-atheros
-firmware-brcm80211
-firmware-iwlwifi
-firmware-libertas
-firmware-mediatek
-firmware-realtek
-firmware-misc-nonfree
+firmware-atheros/bookworm-backports
+firmware-brcm80211/bookworm-backports
+firmware-iwlwifi/bookworm-backports
+firmware-libertas/bookworm-backports
+firmware-mediatek/bookworm-backports
+firmware-realtek/bookworm-backports
 curl
 ca-certificates
 pciutils

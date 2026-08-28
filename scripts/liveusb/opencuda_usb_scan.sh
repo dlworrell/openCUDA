@@ -245,7 +245,7 @@ capture_memory_analysis() {
     fi
     if [[ ! -f "$analyzer" ]]; then
         section "Memory configuration analysis"
-        printf '```text\n[analyzer unavailable]\n```\n' >>"$REPORT"
+        printf '%s\n' '~~~text' '[analyzer unavailable]' '~~~' >>"$REPORT"
         return
     fi
     capture "Memory configuration analysis" python3 "$analyzer"

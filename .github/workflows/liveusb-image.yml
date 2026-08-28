@@ -19,12 +19,15 @@ jobs:
     timeout-minutes: 90
     steps:
       - uses: actions/checkout@v5
-      - name: Install Debian live-build tools
-        run: |
-          sudo apt-get update
-          sudo apt-get install -y live-build
       - name: Build ISO-hybrid
-        run: sudo bash scripts/liveusb/build_debian_live.sh --build
+        run: >-
+          docker run --privileged --rm
+          -v "$PWD:/src" -w /src
+          debian:bookworm
+          bash -lc
+          'apt-get update &&
+          apt-get install -y live-build &&
+          bash scripts/liveusb/build_debian_live.sh --build'
       - name: Inspect image and checksum
         run: |
           ls -lh build/liveusb-debian/opencuda-dl380p-k80-amd64.hybrid.iso

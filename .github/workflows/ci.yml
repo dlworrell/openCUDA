@@ -90,9 +90,16 @@ jobs:
     steps:
       - uses: actions/checkout@v5
       - name: Check shell syntax
-        run: bash -n scripts/liveusb/opencuda_usb_scan.sh tests/liveusb/test_usb_scan.sh
+        run: >-
+          bash -n
+          scripts/liveusb/opencuda_usb_scan.sh
+          scripts/liveusb/build_debian_live.sh
+          tests/liveusb/test_usb_scan.sh
+          tests/liveusb/test_debian_live_build.sh
       - name: Run mixed-GPU fixture
         run: bash tests/liveusb/test_usb_scan.sh
+      - name: Validate Debian live-image builder
+        run: bash tests/liveusb/test_debian_live_build.sh
 
   python:
     name: python-${{ matrix.python-version }}

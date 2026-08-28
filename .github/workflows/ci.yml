@@ -100,7 +100,7 @@ jobs:
       - name: Run mixed-GPU fixture
         run: bash tests/liveusb/test_usb_scan.sh
       - name: Validate removable result storage
-        run: bash tests/liveusb/test_result_storage.sh
+        run: sudo bash tests/liveusb/test_result_storage.sh
       - name: Validate Debian live-image builder
         run: bash tests/liveusb/test_debian_live_build.sh
 

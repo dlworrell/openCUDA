@@ -81,6 +81,7 @@ The builder installs these files in the live root filesystem:
 
 ```text
 /usr/local/sbin/opencuda_usb_scan.sh
+/usr/local/libexec/opencuda/analyze_memory.py
 /usr/local/libexec/opencuda/k80_staged_load.cu
 /usr/local/libexec/opencuda/k80_staged_load
 /etc/systemd/system/opencuda-live-scan.service
@@ -95,6 +96,31 @@ systemctl enable opencuda-live-scan.service
 
 The service occupies virtual console 1 because Wi-Fi and Gmail credentials are
 entered interactively.
+
+## Memory analysis
+
+The image includes an offline analyzer for the two-socket DL380p Gen8 memory
+topology. It reads SMBIOS Types 1, 4, 16, and 17 through `dmidecode` and reports
+installed capacity, populated slots, module technology, rank, voltage, ECC
+width, part number, rated/configured speed, processor memory-speed ceiling,
+socket symmetry, and observable A-L population order. DIMM serial numbers are
+never included.
+Numeric SMBIOS locators are translated through HPE's published slot map
+(`1=C`, `2=G`, `3=K`, `4=D`, `5=H`, `6=L`, `7=J`, `8=F`, `9=B`, `10=I`,
+`11=E`, and `12=A`). The analyzer also checks HPE's rule that the DIMM with
+the heaviest rank load is placed first within each channel.
+
+The report distinguishes maximum bandwidth from maximum capacity and embeds
+the capacity limits from HPE QuickSpecs `c04123238`, version 72: 768 GiB with
+24 x 32 GiB LRDIMMs at 1066 MT/s, 768 GiB with 24 x 32 GiB HDIMMs at 1333
+MT/s, 384 GiB with 24 x 16 GiB RDIMMs at 1333 MT/s, or 128 GiB with 16 x 8 GiB
+UDIMMs. It does not claim RDIMM versus LRDIMM when SMBIOS exposes only the
+generic registered/buffered attribute; part numbers must resolve that case.
+
+For two installed processors, the analyzer expects equal capacity and DIMM
+counts on P1 and P2. It recommends filling matching A-D positions across both
+processors before E-H and then I-L. A warning or `UNVERIFIED` result remains
+advisory until the physical slot labels and DIMM part numbers are inspected.
 
 ## Safety boundary
 

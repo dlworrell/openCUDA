@@ -78,11 +78,20 @@ lb config noauto \
 
 mkdir -p \
     config/package-lists \
+    config/archives \
     config/includes.chroot/usr/local/sbin \
     config/includes.chroot/usr/local/libexec/opencuda \
     config/includes.chroot/etc/systemd/system/multi-user.target.wants \
     config/includes.chroot/etc/modprobe.d \
     config/hooks/live
+
+cat >config/archives/bookworm-backports.pref.chroot <<'EOF'
+Package: *
+Pin: release n=bookworm-backports
+Pin-Priority: 990
+EOF
+cp config/archives/bookworm-backports.pref.chroot \
+    config/archives/bookworm-backports.pref.binary
 
 cp "$SCRIPT_DIR/opencuda_usb_scan.sh" \
     config/includes.chroot/usr/local/sbin/opencuda_usb_scan.sh

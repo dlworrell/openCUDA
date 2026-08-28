@@ -70,6 +70,7 @@ lb config noauto \
     --debian-installer none \
     --archive-areas "main contrib non-free non-free-firmware" \
     --backports true \
+    --firmware-chroot false \
     --apt-recommends false \
     --image-name "$IMAGE_NAME" \
     --iso-application "openCUDA DL380p K80 scanner" \
@@ -86,7 +87,7 @@ mkdir -p \
     config/hooks/live
 
 cat >config/archives/bookworm-backports.pref.chroot <<'EOF'
-Package: nvidia-tesla-470-* libnvidia-tesla-470-* xserver-xorg-video-nvidia-tesla-470
+Package: *nvidia-tesla-470*
 Pin: release n=bookworm-backports
 Pin-Priority: 990
 

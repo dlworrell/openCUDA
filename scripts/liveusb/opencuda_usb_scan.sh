@@ -164,13 +164,22 @@ capture_nvidia() {
 }
 
 compile_load_helper() {
-    local script_dir source output
+    local script_dir source output installed_helper installed_source
     script_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
     source="$script_dir/k80_staged_load.cu"
     output="$RUN_DIR/k80_staged_load"
+    installed_helper="/usr/local/libexec/opencuda/k80_staged_load"
+    installed_source="/usr/local/libexec/opencuda/k80_staged_load.cu"
     if [[ -x "$script_dir/k80_staged_load" ]]; then
         printf '%s\n' "$script_dir/k80_staged_load"
         return 0
+    fi
+    if [[ -x "$installed_helper" ]]; then
+        printf '%s\n' "$installed_helper"
+        return 0
+    fi
+    if [[ ! -f "$source" && -f "$installed_source" ]]; then
+        source="$installed_source"
     fi
     if [[ ! -f "$source" ]] || ! command -v nvcc >/dev/null 2>&1; then
         return 1

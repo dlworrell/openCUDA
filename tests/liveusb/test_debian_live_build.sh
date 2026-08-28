@@ -9,6 +9,7 @@ output="$(bash "$BUILDER" --check)"
 grep -q 'source checks passed' <<<"$output"
 grep -q 'bookworm' "$BUILDER"
 grep -q 'linux-image-amd64/bookworm-backports' "$BUILDER"
+grep -q 'Package: nvidia-tesla-470-' "$BUILDER"
 grep -q 'Pin-Priority: 990' "$BUILDER"
 grep -q 'nvidia-tesla-470-driver/bookworm-backports' "$BUILDER"
 grep -q 'nvidia-cuda-toolkit' "$BUILDER"
@@ -17,6 +18,11 @@ grep -q 'firmware-realtek' "$BUILDER"
 grep -q 'firmware-atheros' "$BUILDER"
 grep -q 'sm_37' "$BUILDER"
 grep -q 'opencuda-live-scan.service' "$BUILDER"
+
+if grep -q '^Package: \*$' "$BUILDER"; then
+    printf 'Builder must not globally prefer Bookworm backports\n' >&2
+    exit 1
+fi
 
 if grep -Eqi '(app.password|wifi.password|gmail[^[:space:]]*@)' "$BUILDER"; then
     printf 'Builder appears to contain a credential or email address\n' >&2

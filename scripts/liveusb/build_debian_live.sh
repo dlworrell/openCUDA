@@ -190,6 +190,9 @@ ISO_PATH="$BUILD_DIR/${IMAGE_NAME}-amd64.hybrid.iso"
     printf 'Expected ISO not found: %s\n' "$ISO_PATH" >&2
     exit 1
 }
-sha256sum "$ISO_PATH" >"$ISO_PATH.sha256"
+(
+    cd "$(dirname "$ISO_PATH")"
+    sha256sum "$(basename "$ISO_PATH")" >"$(basename "$ISO_PATH").sha256"
+)
 printf 'Built %s\n' "$ISO_PATH"
 printf 'Checksum %s.sha256\n' "$ISO_PATH"

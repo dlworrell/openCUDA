@@ -31,7 +31,8 @@ jobs:
       - name: Inspect image and checksum
         run: |
           ls -lh build/liveusb-debian/opencuda-dl380p-k80-amd64.hybrid.iso
-          sha256sum --check build/liveusb-debian/opencuda-dl380p-k80-amd64.hybrid.iso.sha256
+          cd build/liveusb-debian
+          sha256sum --check opencuda-dl380p-k80-amd64.hybrid.iso.sha256
       - name: Upload image
         uses: actions/upload-artifact@v4
         with:

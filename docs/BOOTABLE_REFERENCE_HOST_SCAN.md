@@ -19,6 +19,29 @@ or persistent storage.
 
 ## Live environment requirements
 
+The repository now provides `scripts/liveusb/build_debian_live.sh`. It builds an
+amd64 Debian 12 (Bookworm) ISO-hybrid using Debian's `live-build`, the Bookworm
+backports Linux 6.12 LTS kernel and headers, Debian's Tesla 470.256.02 driver,
+and CUDA 11.8. The kernel line matches openCUDA's current `reference-candidate`;
+the resulting image does not become `reference` until this exact image passes
+the physical K80/CUBIX validation ladder.
+
+On a Debian build host:
+
+```bash
+sudo apt-get update
+sudo apt-get install live-build
+sudo bash scripts/liveusb/build_debian_live.sh --build
+```
+
+The ISO and SHA-256 file are written under `build/liveusb-debian/`. Use
+`--configure-only` to inspect the generated live-build tree without building,
+or `--check` for a non-root source/guardrail check.
+
+The `Debian live USB image` GitHub Actions workflow also builds the same image
+and retains the ISO plus checksum as a seven-day workflow artifact. This is a
+build artifact, not hardware qualification evidence.
+
 The boot environment must provide:
 
 - Bash, GNU coreutils, `sed`, `awk`, `tar`, `gzip`, `curl`, and `util-linux`;
@@ -40,23 +63,22 @@ adapter on a different Linux system before relying on it at the server.
 
 ## USB layout
 
-Use a bootable live-system partition plus a writable partition with filesystem
-label `OPENCUDA_DATA`. Install these files in the live root filesystem:
+Write the generated ISO-hybrid to the bootable USB using a tool that performs a
+raw image write. Keep a separate writable partition or second removable drive
+with filesystem label `OPENCUDA_DATA`; the scanner will use it automatically.
+Do not select any DL380p system disk as the image-write target.
+
+The builder installs these files in the live root filesystem:
 
 ```text
 /usr/local/sbin/opencuda_usb_scan.sh
-/usr/local/libexec/k80_staged_load.cu
+/usr/local/libexec/opencuda/k80_staged_load.cu
+/usr/local/libexec/opencuda/k80_staged_load
 /etc/systemd/system/opencuda-live-scan.service
 ```
 
-If the CUDA helper is precompiled, install it as:
-
-```text
-/usr/local/sbin/k80_staged_load
-```
-
-Adjust the scanner and source-file paths so they remain beside one another, or
-install both under `/usr/local/sbin`. Enable the service with:
+The image compiles the CUDA helper for `sm_37` during the build. Enable the
+service in a custom image with:
 
 ```bash
 systemctl enable opencuda-live-scan.service

@@ -1,0 +1,41 @@
+name: Debian live USB image
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - issue-38-live-usb-scan
+    paths:
+      - scripts/liveusb/**
+      - .github/workflows/liveusb-image.yml
+
+permissions:
+  contents: read
+
+jobs:
+  build-image:
+    name: build-bookworm-amd64
+    runs-on: ubuntu-latest
+    timeout-minutes: 90
+    steps:
+      - uses: actions/checkout@v5
+      - name: Install Debian live-build tools
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y live-build
+      - name: Build ISO-hybrid
+        run: sudo bash scripts/liveusb/build_debian_live.sh --build
+      - name: Inspect image and checksum
+        run: |
+          ls -lh build/liveusb-debian/opencuda-dl380p-k80-amd64.hybrid.iso
+          sha256sum --check build/liveusb-debian/opencuda-dl380p-k80-amd64.hybrid.iso.sha256
+      - name: Upload image
+        uses: actions/upload-artifact@v4
+        with:
+          name: opencuda-dl380p-k80-debian-bookworm-amd64
+          path: |
+            build/liveusb-debian/opencuda-dl380p-k80-amd64.hybrid.iso
+            build/liveusb-debian/opencuda-dl380p-k80-amd64.hybrid.iso.sha256
+          compression-level: 0
+          if-no-files-found: error
+          retention-days: 7

@@ -45,7 +45,7 @@ validate_sources() {
     bash -n "$SCRIPT_DIR/opencuda_usb_scan.sh"
     grep -q 'DEFAULT_EXPECTED_K80_DEVICES=2' "$SCRIPT_DIR/opencuda_usb_scan.sh"
     grep -q 'VERIFIED-FORCED-AIRFLOW' "$SCRIPT_DIR/opencuda_usb_scan.sh"
-    grep -q -- '--devices "$K80_DEVICE_LIST"' "$SCRIPT_DIR/opencuda_usb_scan.sh"
+    grep -Fq -- "--devices \"\$K80_DEVICE_LIST\"" "$SCRIPT_DIR/opencuda_usb_scan.sh"
 }
 
 validate_sources

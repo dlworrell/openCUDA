@@ -2,12 +2,6 @@ name: Debian live USB image
 
 on:
   workflow_dispatch:
-  push:
-    branches:
-      - issue-38-live-usb-scan
-    paths:
-      - scripts/liveusb/**
-      - .github/workflows/liveusb-image.yml
 
 permissions:
   contents: read

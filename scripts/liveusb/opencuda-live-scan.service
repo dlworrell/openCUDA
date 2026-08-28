@@ -2,6 +2,8 @@
 Description=openCUDA DL380p/CUBIX acquisition and staged K80 scan
 After=NetworkManager.service multi-user.target
 Wants=NetworkManager.service
+Conflicts=getty@tty1.service
+Before=getty@tty1.service
 
 [Service]
 Type=oneshot

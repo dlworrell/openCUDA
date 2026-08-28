@@ -64,9 +64,18 @@ adapter on a different Linux system before relying on it at the server.
 ## USB layout
 
 Write the generated ISO-hybrid to the bootable USB using a tool that performs a
-raw image write. Keep a separate writable partition or second removable drive
-with filesystem label `OPENCUDA_DATA`; the scanner will use it automatically.
-Do not select any DL380p system disk as the image-write target.
+raw image write. Keep a separate writable partition or second removable USB
+drive with filesystem label `OPENCUDA_DATA`; the scanner discovers and mounts
+exactly one such removable device automatically. It refuses internal devices,
+non-disk objects, and ambiguous multiple-label matches. Use a filesystem
+supported by the live image, such as ext4 or exFAT. Do not select any DL380p
+system disk as the image-write target.
+
+The results device is mounted with `rw,nosuid,nodev,noexec` and must pass a
+write test before the scan begins. If it is absent, ambiguous, not removable,
+or not writable, the scanner prints a prominent warning and falls back to the
+ephemeral live filesystem. Do not power off in that state until Gmail delivery
+succeeds or the results have been copied manually.
 
 The builder installs these files in the live root filesystem:
 

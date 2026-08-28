@@ -39,7 +39,6 @@ cleanup() {
         nmcli connection delete id "$WIFI_CONNECTION" >/dev/null 2>&1 || true
     fi
 }
-trap cleanup EXIT INT TERM
 
 log() {
     local message="$*"
@@ -73,23 +72,106 @@ capture() {
 }
 
 find_result_root() {
-    local target=""
     if [[ -n "${OPENCUDA_RESULT_ROOT:-}" ]]; then
         RESULT_ROOT="$OPENCUDA_RESULT_ROOT"
         mkdir -p "$RESULT_ROOT"
         return
     fi
-    if command -v findmnt >/dev/null 2>&1; then
-        target="$(findmnt -rn -S LABEL=OPENCUDA_DATA -o TARGET 2>/dev/null | head -n1)"
+
+    local device
+    if device="$(discover_result_device)" && mount_result_device "$device"; then
+        return
     fi
-    if [[ -n "$target" && -w "$target" ]]; then
-        RESULT_ROOT="$target/opencuda-results"
-    elif [[ -d /var/lib/opencuda && -w /var/lib/opencuda ]]; then
+
+    printf 'WARNING: OPENCUDA_DATA is unavailable; results may be lost at shutdown.\n' >&2
+    if [[ -d /var/lib/opencuda && -w /var/lib/opencuda ]]; then
         RESULT_ROOT=/var/lib/opencuda/results
     else
         RESULT_ROOT=/tmp/opencuda-results
     fi
     mkdir -p "$RESULT_ROOT"
+}
+
+discover_result_device() {
+    command -v blkid >/dev/null 2>&1 || {
+        printf 'blkid is unavailable; cannot locate OPENCUDA_DATA.\n' >&2
+        return 1
+    }
+    command -v lsblk >/dev/null 2>&1 || {
+        printf 'lsblk is unavailable; cannot verify removable storage.\n' >&2
+        return 1
+    }
+
+    local -a candidates=()
+    mapfile -t candidates < <(blkid -t LABEL=OPENCUDA_DATA -o device 2>/dev/null | awk 'NF')
+    if (( ${#candidates[@]} == 0 )); then
+        printf 'No filesystem labelled OPENCUDA_DATA was detected.\n' >&2
+        return 1
+    fi
+    if (( ${#candidates[@]} != 1 )); then
+        printf 'Multiple filesystems are labelled OPENCUDA_DATA; refusing an ambiguous mount.\n' >&2
+        return 1
+    fi
+
+    local device="${candidates[0]}"
+    local removable transport device_type
+    removable="$(lsblk -dnro RM "$device" 2>/dev/null | head -n1)"
+    transport="$(lsblk -dnro TRAN "$device" 2>/dev/null | head -n1)"
+    device_type="$(lsblk -dnro TYPE "$device" 2>/dev/null | head -n1)"
+    if [[ "$device_type" != "disk" && "$device_type" != "part" ]]; then
+        printf 'OPENCUDA_DATA is not a disk or partition; refusing mount: %s\n' "$device" >&2
+        return 1
+    fi
+    if [[ "$removable" != "1" && "$transport" != "usb" ]]; then
+        printf 'OPENCUDA_DATA is not verified as removable USB storage; refusing mount: %s\n' "$device" >&2
+        return 1
+    fi
+    printf '%s\n' "$device"
+}
+
+use_result_target() {
+    local target="$1"
+    local result_root="$target/opencuda-results"
+    local probe
+    mkdir -p "$result_root" 2>/dev/null || return 1
+    probe="$(mktemp "$result_root/.opencuda-write-test.XXXXXX" 2>/dev/null)" || return 1
+    rm -f "$probe"
+    RESULT_ROOT="$result_root"
+}
+
+mount_result_device() {
+    local device="$1"
+    local target=""
+    if command -v findmnt >/dev/null 2>&1; then
+        target="$(findmnt -rn -S "$device" -o TARGET 2>/dev/null | head -n1)"
+    fi
+    if [[ -n "$target" ]]; then
+        use_result_target "$target" || {
+            printf 'Mounted OPENCUDA_DATA is not writable: %s\n' "$target" >&2
+            return 1
+        }
+        return
+    fi
+
+    (( EUID == 0 )) || {
+        printf 'Root privileges are required to mount OPENCUDA_DATA.\n' >&2
+        return 1
+    }
+    command -v mount >/dev/null 2>&1 || {
+        printf 'mount is unavailable; cannot attach OPENCUDA_DATA.\n' >&2
+        return 1
+    }
+    target="${OPENCUDA_DATA_MOUNTPOINT:-/run/opencuda-data}"
+    mkdir -p "$target" || return 1
+    if ! mount -o rw,nosuid,nodev,noexec "$device" "$target"; then
+        printf 'Failed to mount OPENCUDA_DATA device: %s\n' "$device" >&2
+        return 1
+    fi
+    use_result_target "$target" || {
+        printf 'OPENCUDA_DATA mounted but failed its write test: %s\n' "$target" >&2
+        umount "$target" 2>/dev/null || true
+        return 1
+    }
 }
 
 initialize_run() {
@@ -394,4 +476,7 @@ main() {
     printf '\nScan complete: %s\nResults: %s\n' "$FINAL_STATUS" "$RUN_DIR"
 }
 
-main "$@"
+if [[ "${BASH_SOURCE[0]}" == "$0" ]]; then
+    trap cleanup EXIT INT TERM
+    main "$@"
+fi

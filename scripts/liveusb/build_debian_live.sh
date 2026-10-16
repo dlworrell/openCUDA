@@ -38,6 +38,7 @@ validate_sources() {
     local required
     for required in \
         "$SCRIPT_DIR/opencuda_usb_scan.sh" \
+        "$SCRIPT_DIR/analyze_memory.py" \
         "$SCRIPT_DIR/k80_staged_load.cu" \
         "$SCRIPT_DIR/opencuda-live-scan.service"; do
         [[ -s "$required" ]] || { printf 'Required source missing: %s\n' "$required" >&2; return 1; }
@@ -102,9 +103,12 @@ cp "$SCRIPT_DIR/opencuda_usb_scan.sh" \
     config/includes.chroot/usr/local/sbin/opencuda_usb_scan.sh
 cp "$SCRIPT_DIR/k80_staged_load.cu" \
     config/includes.chroot/usr/local/libexec/opencuda/k80_staged_load.cu
+cp "$SCRIPT_DIR/analyze_memory.py" \
+    config/includes.chroot/usr/local/libexec/opencuda/analyze_memory.py
 cp "$SCRIPT_DIR/opencuda-live-scan.service" \
     config/includes.chroot/etc/systemd/system/opencuda-live-scan.service
 chmod 0755 config/includes.chroot/usr/local/sbin/opencuda_usb_scan.sh
+chmod 0755 config/includes.chroot/usr/local/libexec/opencuda/analyze_memory.py
 ln -sfn /etc/systemd/system/opencuda-live-scan.service \
     config/includes.chroot/etc/systemd/system/multi-user.target.wants/opencuda-live-scan.service
 
@@ -118,6 +122,7 @@ nvidia-tesla-470-driver/bookworm-backports
 nvidia-persistenced
 nvidia-cuda-toolkit
 nvidia-cuda-toolkit-gcc
+python3-minimal
 network-manager
 wpasupplicant
 wireless-regdb

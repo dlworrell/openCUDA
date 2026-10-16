@@ -236,6 +236,21 @@ capture_inventory() {
     capture "Hardware sensors" sensors -A
 }
 
+capture_memory_analysis() {
+    local script_dir analyzer
+    script_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+    analyzer="$script_dir/analyze_memory.py"
+    if [[ ! -f "$analyzer" ]]; then
+        analyzer=/usr/local/libexec/opencuda/analyze_memory.py
+    fi
+    if [[ ! -f "$analyzer" ]]; then
+        section "Memory configuration analysis"
+        printf '%s\n' '~~~text' '[analyzer unavailable]' '~~~' >>"$REPORT"
+        return
+    fi
+    capture "Memory configuration analysis" python3 "$analyzer"
+}
+
 capture_nvidia() {
     capture "NVIDIA device list" nvidia-smi -L
     capture "NVIDIA detailed state" nvidia-smi -q
@@ -458,6 +473,7 @@ main() {
     fi
     connect_wifi || true
     capture_inventory
+    capture_memory_analysis
     capture_nvidia
     if run_staged_test; then
         FINAL_STATUS="PASS"

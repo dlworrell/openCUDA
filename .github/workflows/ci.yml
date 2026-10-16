@@ -101,6 +101,8 @@ jobs:
         run: bash tests/liveusb/test_usb_scan.sh
       - name: Validate removable result storage
         run: sudo bash tests/liveusb/test_result_storage.sh
+      - name: Validate DL380p memory analysis
+        run: python3 tests/liveusb/test_memory_analysis.py
       - name: Validate Debian live-image builder
         run: bash tests/liveusb/test_debian_live_build.sh
 

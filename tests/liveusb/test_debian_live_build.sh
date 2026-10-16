@@ -19,6 +19,8 @@ grep -q 'firmware-realtek' "$BUILDER"
 grep -q 'firmware-atheros' "$BUILDER"
 grep -q 'sm_37' "$BUILDER"
 grep -q 'opencuda-live-scan.service' "$BUILDER"
+grep -q 'analyze_memory.py' "$BUILDER"
+grep -q 'python3-minimal' "$BUILDER"
 
 if grep -q '^Package: \*$' "$BUILDER"; then
     printf 'Builder must not globally prefer Bookworm backports\n' >&2

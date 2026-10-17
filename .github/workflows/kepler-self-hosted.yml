@@ -1,5 +1,7 @@
 name: kepler-hardware-ci
 
+# This public repository must never have access to a lab self-hosted runner.
+# See docs/HARDWARE_EXECUTION_SECURITY.md.
 on:
   workflow_dispatch:
 
@@ -7,17 +9,11 @@ permissions:
   contents: read
 
 jobs:
-  kepler:
-    # Register the DL380p runner with all four labels and runner >= v2.327.1 before enabling this workflow.
-    runs-on: [self-hosted, linux, x64, kepler]
-    timeout-minutes: 30
+  hardware-unavailable:
+    runs-on: ubuntu-latest
+    timeout-minutes: 2
     steps:
-      - uses: actions/checkout@v5
-      - name: Host diagnostics
-        run: ./scripts/diagnose_kepler_host.sh
-      - name: Configure CUDA 11.x backend
-        run: cmake --preset kepler-cuda11
-      - name: Build
-        run: cmake --build --preset kepler-cuda11 --parallel
-      - name: Native tests
-        run: ctest --preset kepler-cuda11
+      - name: Hardware validation requires local operator execution
+        run: |
+          echo "::error::Public-repository lab execution is prohibited. Use the documented local validation procedure."
+          exit 1

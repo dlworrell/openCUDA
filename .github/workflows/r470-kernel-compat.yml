@@ -15,7 +15,7 @@ on:
   workflow_dispatch:
     inputs:
       hardware_build:
-        description: 'Build patched R470 modules on the self-hosted Kepler runner'
+        description: 'Request hardware build (blocked; use local operator procedure)'
         required: false
         default: false
         type: boolean
@@ -51,31 +51,12 @@ jobs:
           done < patches/nvidia-r470/SERIES
 
   kepler-build:
-    name: K80 R470 module build
+    name: K80 R470 module build unavailable
     if: ${{ github.event_name == 'workflow_dispatch' && inputs.hardware_build }}
-    runs-on: [self-hosted, linux, x64, kepler, cuda11]
-    timeout-minutes: 45
+    runs-on: ubuntu-latest
+    timeout-minutes: 2
     steps:
-      - uses: actions/checkout@v5
-      - name: Record build environment
+      - name: Hardware build requires local operator execution
         run: |
-          uname -a
-          cc --version | head -n 1
-          test -d "/lib/modules/$(uname -r)/build"
-      - name: Fetch and apply pinned R470 series
-        run: sh scripts/r470/apply-series.sh
-      - name: Build NVIDIA kernel modules
-        run: |
-          set -eu
-          . patches/nvidia-r470/UPSTREAM
-          make -C ".cache/r470/work/NVIDIA-Linux-x86_64-$NVIDIA_DRIVER_VERSION/kernel" \
-            -j"$(getconf _NPROCESSORS_ONLN)" modules
-      - name: Record module artifacts
-        run: |
-          set -eu
-          . patches/nvidia-r470/UPSTREAM
-          find ".cache/r470/work/NVIDIA-Linux-x86_64-$NVIDIA_DRIVER_VERSION/kernel" \
-            -name '*.ko' -print -exec modinfo {} \; || true
-
-# Runtime installation/loading is deliberately excluded from ordinary CI.
-# Hardware promotion requires a separate controlled validation step on the K80 node.
+          echo "::error::Public-repository lab execution is prohibited. See docs/HARDWARE_EXECUTION_SECURITY.md."
+          exit 1

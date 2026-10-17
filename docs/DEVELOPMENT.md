@@ -70,7 +70,7 @@ CI builds the portable C/C++ project on Linux, macOS, and Windows and executes C
 
 ## Legacy-GPU CI
 
-Public GitHub-hosted runners do not provide Tesla K80 hardware. The repository therefore separates portable CI from hardware-in-the-loop testing. A later self-hosted runner on the DL380p should be labeled for Kepler/CUDA 11 and run topology, P2P, memory-bandwidth, ECC, and numerical-correctness tests.
+Public GitHub-hosted runners do not provide Tesla K80 hardware. The repository therefore separates portable CI from hardware-in-the-loop testing. Do not enroll the DL380p as a runner for this public repository. Run topology, P2P, memory-bandwidth, ECC, and numerical-correctness tests locally on reviewed commits using [Hardware execution security](HARDWARE_EXECUTION_SECURITY.md).
 
 ## Branching
 

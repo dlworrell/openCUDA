@@ -12,7 +12,7 @@ openCUDA uses five complementary layers.
 | Source/repository compliance | `compliance-ci` | Enforce repository hygiene, source-policy, ABI, formatting, static-analysis, sanitizer, GitHub-form, workflow-security, and content-policy checks. |
 | Collaboration moderation | `content-moderation` | Scan new/edited Discussions, comments, Issues, PR descriptions/reviews, and review comments and route violations for human review. |
 | Live repository audit | `repository-audit` | Compare live GitHub settings, labels, categories, and protected-branch state with the repository policy. |
-| Legacy hardware validation | `kepler-hardware-ci` | Validate CUDA 11.x / `sm_37` behavior on the self-hosted Kepler reference runner. |
+| Legacy hardware validation | `kepler-hardware-ci` | Public hardware dispatch is blocked; validate CUDA 11.x / `sm_37` locally on reviewed commits. |
 
 These layers are intentionally separate. A source-code failure must not be hidden by a green repository-settings audit, and a community-content violation is not a compiler failure.
 
@@ -28,7 +28,7 @@ These layers are intentionally separate. A source-code failure must not be hidde
 - Windows x86-64 using MSVC/MASM;
 - Python 3.10 through 3.14.
 
-Every native C/C++ build enables `OPENCUDA_WARNINGS_AS_ERRORS=ON`. The legacy CUDA backend remains isolated from portable CI and is tested by the Kepler self-hosted workflow.
+Every native C/C++ build enables `OPENCUDA_WARNINGS_AS_ERRORS=ON`. The legacy CUDA backend remains isolated from portable CI and is tested locally by an operator on a reviewed commit.
 
 ## Source and repository compliance
 
@@ -87,6 +87,7 @@ The baseline policy requires:
 - explicit top-level `permissions`;
 - no `permissions: write-all`;
 - no `pull_request_target` workflows;
+- `public-runner-policy` rejects lab/custom runner selectors across `.yml` and `.yaml` workflows; keep the live runner inventory empty because source checks are not access controls;
 - external Actions only from the repository allowlist and with an explicit version tag or full commit SHA;
 - no pipe-to-shell downloads;
 - no direct interpolation of untrusted Issue/Discussion/PR text into generated shell commands.
@@ -165,7 +166,7 @@ Both configurations are unit-tested before they reach `main`.
 
 ## Kepler hardware validation
 
-`kepler-hardware-ci` remains manually triggered until the reference DL380p runner is enrolled with the required self-hosted labels. It is the authoritative place for tests that actually require CUDA 11.x, R470, `sm_37`, Tesla K80, CUBIX, NUMA, P2P, ECC, or reference-node measurements.
+`kepler-hardware-ci` is a hosted-only failure notice. Do not register a lab runner for this public repository. The R470 workflow also rejects its optional hardware-build request. Use [Hardware execution security](HARDWARE_EXECUTION_SECURITY.md) for local validation and the private control boundary required before future automation. Tests of CUDA 11.x, R470, `sm_37`, Tesla K80, CUBIX, NUMA, P2P, ECC, and reference-node behavior require recorded local hardware evidence.
 
 Portable CI must never claim to validate those properties without the hardware.
 
@@ -180,7 +181,7 @@ Once Issue #4 branch/ruleset enforcement is completed, the following should be r
 - `formatting-static-analysis`;
 - `sanitizers-linux`.
 
-The self-hosted Kepler job should be required only for changes whose taxonomy/path/risk requires actual legacy-hardware validation, otherwise loss of the lab runner would deadlock unrelated portable development.
+Do not require the blocked public hardware workflow as a status check. Require recorded local hardware evidence in review when the change needs legacy-hardware validation.
 
 ## Local preflight
 

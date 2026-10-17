@@ -6,4 +6,4 @@ These scripts intentionally operate on external inputs in `.cache/r470/` and do 
 - `apply-series.sh` extracts the NVIDIA runfile and applies `patches/nvidia-r470/SERIES` in deterministic order.
 - `verify-series.sh` performs repository/provenance checks without downloading or modifying system software.
 
-System installation/loading remains a deliberate operator action. The GitHub Actions workflow only performs the hardware build step when manually dispatched with `hardware_build=true` on the self-hosted Kepler runner.
+System installation/loading remains a deliberate operator action. The public GitHub Actions workflow rejects `hardware_build=true` on a GitHub-hosted runner. Use the [local operator procedure](../../docs/HARDWARE_EXECUTION_SECURITY.md); do not enroll the lab machine as a public-repository runner.

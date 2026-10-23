@@ -91,4 +91,4 @@ cmake --build --preset dev
 ctest --preset dev
 ```
 
-Low-level runtime changes should also be exercised with Clang static analysis and sanitizer jobs when available. Legacy CUDA/K80 behavior must be validated on the self-hosted Kepler workflow rather than inferred from portable CI.
+Low-level runtime changes should also be exercised with Clang static analysis and sanitizer jobs when available. Legacy CUDA/K80 behavior must be validated locally on a reviewed commit using [Hardware execution security](docs/HARDWARE_EXECUTION_SECURITY.md). Do not enroll lab runners for this public repository or infer hardware validation from portable CI.

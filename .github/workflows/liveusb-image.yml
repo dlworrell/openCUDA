@@ -12,7 +12,7 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 90
     steps:
-      - uses: actions/checkout@v5
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
       - name: Build ISO-hybrid
         run: >-
           docker run --privileged --rm
@@ -28,7 +28,7 @@ jobs:
           cd build/liveusb-debian
           sha256sum --check opencuda-dl380p-k80-amd64.hybrid.iso.sha256
       - name: Upload image
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
         with:
           name: opencuda-dl380p-k80-debian-bookworm-amd64
           path: |

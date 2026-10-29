@@ -2,7 +2,7 @@ name: portable-ci
 
 on:
   push:
-    branches: [main]
+    branches: [main, dev-daily, fitment]
   pull_request:
   workflow_dispatch:
 

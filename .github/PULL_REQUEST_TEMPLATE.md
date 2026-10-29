@@ -1,3 +1,5 @@
+ADR: <!-- the ADR this implements or changes, or "n/a, <reason>" (Catylist Code, Law 1) -->
+
 ## Summary
 
 Describe the problem, approach, and observable result.

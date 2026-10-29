@@ -7,7 +7,7 @@ on:
       - 'scripts/r470/**'
       - '.github/workflows/r470-kernel-compat.yml'
   push:
-    branches: [main]
+    branches: [main, dev-daily, fitment]
     paths:
       - 'patches/nvidia-r470/**'
       - 'scripts/r470/**'

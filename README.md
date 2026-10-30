@@ -127,3 +127,7 @@ CI also treats GitHub configuration and collaboration safety as testable project
 ## Name and affiliation
 
 openCUDA is an independent research/development project. It is not affiliated with or endorsed by NVIDIA Corporation, CUDA, PyTorch, OpenCore, Acidanthera, or Dortania. CUDA is a trademark of NVIDIA Corporation.
+
+## Releasing
+
+Changes move `dev-daily` → `fitment` → `main`, and a release is published only after the owner approves it. See [docs/RELEASING.md](docs/RELEASING.md).

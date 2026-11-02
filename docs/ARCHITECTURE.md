@@ -1,3 +1,9 @@
+<!--
+SPDX-FileCopyrightText: Donovan Worrell
+SPDX-License-Identifier: Apache-2.0
+Catalyst-File-ID: urn:uuid:70ad1fad-9ab3-43e1-8178-b005abf71a7f
+-->
+
 # openCUDA Architecture
 
 ## Principle

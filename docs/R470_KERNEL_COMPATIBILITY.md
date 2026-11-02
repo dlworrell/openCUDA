@@ -1,3 +1,9 @@
+<!--
+SPDX-FileCopyrightText: Donovan Worrell
+SPDX-License-Identifier: Apache-2.0
+Catalyst-File-ID: urn:uuid:247ba020-e88d-49fe-a09e-26bf7dea6e45
+-->
+
 # R470 Linux kernel compatibility
 
 openCUDA treats NVIDIA R470 as a contained legacy execution dependency, not as the project API.

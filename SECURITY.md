@@ -1,3 +1,9 @@
+<!--
+SPDX-FileCopyrightText: Donovan Worrell
+SPDX-License-Identifier: Apache-2.0
+Catalyst-File-ID: urn:uuid:97cb447e-2667-40bd-89d6-35bd2f7f1f07
+-->
+
 # Security Policy
 
 ## Legacy driver warning

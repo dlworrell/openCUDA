@@ -1,3 +1,9 @@
+<!--
+SPDX-FileCopyrightText: Donovan Worrell
+SPDX-License-Identifier: Apache-2.0
+Catalyst-File-ID: urn:uuid:c1b5d924-5544-4560-94ba-71766ae3b9dc
+-->
+
 # Founding Design Discussion
 
 This document records the technical reasoning that led to openCUDA. It is a design record, not a claim that every idea below is already implemented.

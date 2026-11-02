@@ -1,3 +1,9 @@
+<!--
+SPDX-FileCopyrightText: Donovan Worrell
+SPDX-License-Identifier: Apache-2.0
+Catalyst-File-ID: urn:uuid:c59e3c63-831f-4a86-938d-511eefd96630
+-->
+
 # openCUDA
 
 openCUDA is an experimental compatibility framework for extending the useful life of legacy NVIDIA CUDA hardware behind a modern software-facing interface.

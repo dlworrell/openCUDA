@@ -1,3 +1,9 @@
+<!--
+SPDX-FileCopyrightText: Donovan Worrell
+SPDX-License-Identifier: Apache-2.0
+Catalyst-File-ID: urn:uuid:a7b19e57-28d6-45f4-83d3-5eaa1260e089
+-->
+
 # openCUDA Role Assignments
 
 This registry is the authoritative record of project governance roles defined in [`GOVERNANCE.md`](../GOVERNANCE.md). GitHub repository permission alone does not create project approval authority.

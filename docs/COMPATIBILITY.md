@@ -1,3 +1,9 @@
+<!--
+SPDX-FileCopyrightText: Donovan Worrell
+SPDX-License-Identifier: Apache-2.0
+Catalyst-File-ID: urn:uuid:fb97dd16-4b29-47f2-acd6-8d6baf2aa2e3
+-->
+
 # Compatibility Policy
 
 ## Hard boundary: Kepler and modern CUDA

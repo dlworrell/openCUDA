@@ -1,3 +1,9 @@
+<!--
+SPDX-FileCopyrightText: Donovan Worrell
+SPDX-License-Identifier: Apache-2.0
+Catalyst-File-ID: urn:uuid:886879e2-06af-4a63-af5b-bd316c75316a
+-->
+
 # Reference Platform: DL380p Gen8 + CUBIX + Tesla K80
 
 ## Host

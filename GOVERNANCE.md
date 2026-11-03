@@ -1,3 +1,9 @@
+<!--
+SPDX-FileCopyrightText: Donovan Worrell
+SPDX-License-Identifier: Apache-2.0
+Catalyst-File-ID: urn:uuid:779fc6ef-8439-4fda-bd0c-8c4a021db28d
+-->
+
 # openCUDA Governance
 
 openCUDA uses a least-privilege governance model that separates **GitHub access**, **project authority**, and **domain approval responsibility**. A person's repository permission level does not by itself grant every project role, and a project role is not effective until it is recorded in [`docs/ROLE_ASSIGNMENTS.md`](docs/ROLE_ASSIGNMENTS.md).

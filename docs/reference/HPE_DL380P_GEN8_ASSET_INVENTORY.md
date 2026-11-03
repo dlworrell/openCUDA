@@ -1,3 +1,9 @@
+<!--
+SPDX-FileCopyrightText: Donovan Worrell
+SPDX-License-Identifier: Apache-2.0
+Catalyst-File-ID: urn:uuid:41dd8aef-218b-4a08-8f8e-e04a37d4ef47
+-->
+
 # HP ProLiant DL380p Gen8 asset inventory
 
 Issue: #36

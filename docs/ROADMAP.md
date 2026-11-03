@@ -1,3 +1,9 @@
+<!--
+SPDX-FileCopyrightText: Donovan Worrell
+SPDX-License-Identifier: Apache-2.0
+Catalyst-File-ID: urn:uuid:a5f9ed5b-56fa-4799-99d8-068cace06063
+-->
+
 # Roadmap
 
 ## Phase 0 — Bootstrap

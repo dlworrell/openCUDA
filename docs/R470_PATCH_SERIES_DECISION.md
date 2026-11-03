@@ -1,3 +1,9 @@
+<!--
+SPDX-FileCopyrightText: Donovan Worrell
+SPDX-License-Identifier: Apache-2.0
+Catalyst-File-ID: urn:uuid:29807531-b529-4b01-a5b1-57bccb3209b3
+-->
+
 # R470 patch-series decision record
 
 ## Decision

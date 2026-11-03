@@ -1,3 +1,9 @@
+<!--
+SPDX-FileCopyrightText: Donovan Worrell
+SPDX-License-Identifier: Apache-2.0
+Catalyst-File-ID: urn:uuid:c157c4aa-415f-4330-9cdb-759dd5d6f275
+-->
+
 # Hardware execution security: no public lab runners
 
 ## Decision

@@ -1,3 +1,9 @@
+<!--
+SPDX-FileCopyrightText: Donovan Worrell
+SPDX-License-Identifier: Apache-2.0
+Catalyst-File-ID: urn:uuid:d5209c0e-b0ac-4cce-973b-5eefc6da3e3e
+-->
+
 # openCUDA Label Taxonomy
 
 This document defines the current repository label taxonomy derived from the project's architecture, compatibility policy, development environment, reference platform, founding discussion, and staged roadmap.

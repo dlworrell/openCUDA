@@ -1,3 +1,9 @@
+<!--
+SPDX-FileCopyrightText: Donovan Worrell
+SPDX-License-Identifier: Apache-2.0
+Catalyst-File-ID: urn:uuid:cc54afd5-24db-4b98-9b14-b7a3be32555e
+-->
+
 # Issues and Discussions Workflow
 
 openCUDA separates conversation/design discovery from committed implementation work.

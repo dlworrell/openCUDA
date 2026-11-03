@@ -1,3 +1,9 @@
+<!--
+SPDX-FileCopyrightText: Donovan Worrell
+SPDX-License-Identifier: Apache-2.0
+Catalyst-File-ID: urn:uuid:191127ad-8da8-4108-bdab-b76173a3046c
+-->
+
 # R470 maintenance scripts
 
 These scripts intentionally operate on external inputs in `.cache/r470/` and do not install or load NVIDIA modules automatically.

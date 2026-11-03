@@ -1,3 +1,9 @@
+<!--
+SPDX-FileCopyrightText: Donovan Worrell
+SPDX-License-Identifier: Apache-2.0
+Catalyst-File-ID: urn:uuid:d100abae-a868-4a61-bd17-f11621cd5452
+-->
+
 # Governance, Role, and Access Taxonomy
 
 This document extends [`LABEL_TAXONOMY.md`](LABEL_TAXONOMY.md) with responsibility-routing and administration-level labels. These labels classify **what authority a work item requires**. They do not grant authority to a user; human assignments are recorded in [`ROLE_ASSIGNMENTS.md`](ROLE_ASSIGNMENTS.md) and governed by [`../GOVERNANCE.md`](../GOVERNANCE.md).

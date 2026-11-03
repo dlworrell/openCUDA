@@ -1,3 +1,9 @@
+<!--
+SPDX-FileCopyrightText: Donovan Worrell
+SPDX-License-Identifier: Apache-2.0
+Catalyst-File-ID: urn:uuid:61b2f0a1-e398-4e39-b13d-84264a1d0a49
+-->
+
 # Contributing to openCUDA
 
 openCUDA is pre-alpha compatibility research. Changes should prioritize correctness, reproducibility, and explicit capability boundaries over making unsupported operations appear to work.

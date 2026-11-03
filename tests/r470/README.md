@@ -1,3 +1,9 @@
+<!--
+SPDX-FileCopyrightText: Donovan Worrell
+SPDX-License-Identifier: Apache-2.0
+Catalyst-File-ID: urn:uuid:686f2977-c1ff-46b7-b045-727737489194
+-->
+
 # R470 compatibility tests
 
 This directory documents and will host tests used to promote an NVIDIA R470/kernel combination through the validation ladder in `docs/R470_KERNEL_COMPATIBILITY.md`.

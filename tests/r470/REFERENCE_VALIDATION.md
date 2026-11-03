@@ -1,3 +1,9 @@
+<!--
+SPDX-FileCopyrightText: Donovan Worrell
+SPDX-License-Identifier: Apache-2.0
+Catalyst-File-ID: urn:uuid:9d11a333-8932-4a8d-9e9e-37a4bca3a1f4
+-->
+
 # R470 reference-hardware validation checklist
 
 Use this checklist when promoting a Linux kernel line from build-tested to reference status on the openCUDA Tesla K80/Cubix node.

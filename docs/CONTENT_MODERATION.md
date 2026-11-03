@@ -1,3 +1,9 @@
+<!--
+SPDX-FileCopyrightText: Donovan Worrell
+SPDX-License-Identifier: Apache-2.0
+Catalyst-File-ID: urn:uuid:2c0ad654-ba9f-439d-91b7-cc566020e02d
+-->
+
 # Content Moderation Operations
 
 This document describes how openCUDA enforces `CODE_OF_CONDUCT.md` across GitHub collaboration surfaces.

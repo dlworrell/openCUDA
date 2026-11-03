@@ -1,3 +1,9 @@
+<!--
+SPDX-FileCopyrightText: Donovan Worrell
+SPDX-License-Identifier: Apache-2.0
+Catalyst-File-ID: urn:uuid:eda621f1-f78e-449e-9848-3c57dcb3d654
+-->
+
 # openCUDA CI, Compliance, and Moderation Test Suite
 
 This document defines the repository verification system. The goal is not only to compile the code: CI must continuously verify the assumptions recorded in the architecture, compatibility, governance, issue/discussion routing, and community-content policies.

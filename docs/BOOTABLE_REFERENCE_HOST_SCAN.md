@@ -1,3 +1,9 @@
+<!--
+SPDX-FileCopyrightText: Donovan Worrell
+SPDX-License-Identifier: Apache-2.0
+Catalyst-File-ID: urn:uuid:acdce3b3-e921-423d-96b7-976a63c90c02
+-->
+
 # Bootable DL380p/CUBIX reference-host scan
 
 Issue: #38

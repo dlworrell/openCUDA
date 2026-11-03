@@ -1,3 +1,9 @@
+<!--
+SPDX-FileCopyrightText: Donovan Worrell
+SPDX-License-Identifier: Apache-2.0
+Catalyst-File-ID: urn:uuid:586206f4-41c4-461b-98f4-73ee988bc4d2
+-->
+
 # HP ProLiant DL380p Gen8 platform preservation
 
 Issue: #36
